@@ -25,6 +25,14 @@ function selectedTile(){return currentSurface().tiles.find(t=>t.id===state.selec
 function sourceName(object){for(let o=object;o;o=o.parent){const name=o.userData.name||o.name;if(data.objects.includes(name))return name;}return object.name;}
 function sectionDimensions(section){return section===1?section1Dimensions:[...data.section2.dimensions.map(d=>({...d,zone:'cabinet'})),...data.section3.dimensions.map(d=>({...d,zone:'wall-cabinet'}))];}
 function visibleDimensions(){return data.dimensions.filter(d=>state.section===1||(d.zone==='cabinet'?state.cabinetDimensions:state.wallCabinetDimensions));}
+function formatLoadTime(seconds){const total=Math.max(1,Math.ceil(seconds));return total<60?`${total} 秒`:`${Math.floor(total/60)} 分 ${total%60} 秒`;}
+function updateModelProgress(event,startedAt){
+  const loaded=event.loaded||0,total=event.total||0,percent=total?Math.min(100,Math.round(loaded/total*100)):0;
+  const elapsed=(performance.now()-startedAt)/1000,speed=elapsed>0?loaded/elapsed:0,remaining=speed&&total?Math.max(0,(total-loaded)/speed):0;
+  const progress=$('#model-load-progress'),fill=$('#model-load-progress-fill');progress.setAttribute('aria-valuenow',String(percent));fill.style.width=percent+'%';
+  const loadedMb=(loaded/1048576).toFixed(1),totalMb=(total/1048576).toFixed(1),speedMb=(speed/1048576).toFixed(1);
+  $('#model-load-detail').textContent=total?percent===100?`已下载 ${loadedMb} / ${totalMb} MB · 正在解析模型…`:`${loadedMb} / ${totalMb} MB · ${percent}% · ${speedMb} MB/s · 预计剩余 ${formatLoadTime(remaining)}`:`已下载 ${loadedMb} MB · 正在读取模型…`;
+}
 
 async function setupModel(){
   const host=$('#model-canvas');
@@ -36,7 +44,8 @@ async function setupModel(){
   controls.addEventListener('change',()=>{layoutDirty=true;});
   scene.environment=studioEnvironment(renderer);
   scene.add(new THREE.HemisphereLight(0xf8fbff,0xa2afbe,2.7));const key=new THREE.DirectionalLight(0xffffff,2.5);key.position.set(-5,10,-7);scene.add(key);const fill=new THREE.DirectionalLight(0xdceaff,1.4);fill.position.set(6,5,4);scene.add(fill);
-  const gltf=await new GLTFLoader().loadAsync(`./public/v2/${data.modelFile}?v=${encodeURIComponent(data.exportedAt)}`);
+  const loadStartedAt=performance.now();
+  const gltf=await new GLTFLoader().loadAsync(`./public/v2/${data.modelFile}?v=${encodeURIComponent(data.exportedAt)}`,event=>updateModelProgress(event,loadStartedAt));
   model=gltf.scene;model.updateMatrixWorld(true);const rawBounds=new THREE.Box3().setFromObject(model);
   const center=rawBounds.getCenter(new THREE.Vector3());offset=new THREE.Vector3(-center.x,-rawBounds.min.y,-center.z);model.position.add(offset);root.add(model);model.updateMatrixWorld(true);modelBounds=new THREE.Box3().setFromObject(model);
   cameraPresets={};

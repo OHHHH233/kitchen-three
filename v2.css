@@ -87,3 +87,4 @@
 }
 .model-annotations .model-label{pointer-events:none;cursor:default}
 .dimension-line.axis-z:not(.selected),.dimension-leader.axis-z{stroke:#55b9e8}
+.model-load-track{width:min(360px,72vw);height:8px;overflow:hidden;border-radius:99px;background:#e4eaf1}.model-load-track span{display:block;width:0;height:100%;border-radius:inherit;background:#397fd0;transition:width .16s ease}.model-message #model-load-detail{min-height:1.7em;margin:0;color:#6d7885;font-size:11px;font-variant-numeric:tabular-nums}
