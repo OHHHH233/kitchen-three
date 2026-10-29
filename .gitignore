@@ -1,0 +1,9 @@
+/.backups/
+/.imports/
+/edge-profile/
+/qa/
+/scripts/
+/tests/
+/browser-check.png
+/edge-dom.txt
+/edge-err.txt
