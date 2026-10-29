@@ -27,11 +27,11 @@ function sectionDimensions(section){return section===1?section1Dimensions:[...da
 function visibleDimensions(){return data.dimensions.filter(d=>state.section===1||(d.zone==='cabinet'?state.cabinetDimensions:state.wallCabinetDimensions));}
 function formatLoadTime(seconds){const total=Math.max(1,Math.ceil(seconds));return total<60?`${total} 秒`:`${Math.floor(total/60)} 分 ${total%60} 秒`;}
 function updateModelProgress(event,startedAt){
-  const loaded=event.loaded||0,total=event.total||0,percent=total?Math.min(100,Math.round(loaded/total*100)):0;
+  const loaded=event.loaded||0,total=data?.modelFileSizeBytes||event.total||0,percent=total?Math.min(100,Math.round(loaded/total*100)):0;
   const elapsed=(performance.now()-startedAt)/1000,speed=elapsed>0?loaded/elapsed:0,remaining=speed&&total?Math.max(0,(total-loaded)/speed):0;
   const progress=$('#model-load-progress'),fill=$('#model-load-progress-fill');progress.setAttribute('aria-valuenow',String(percent));fill.style.width=percent+'%';
   const loadedMb=(loaded/1048576).toFixed(1),totalMb=(total/1048576).toFixed(1),speedMb=(speed/1048576).toFixed(1);
-  $('#model-load-detail').textContent=total?percent===100?`已下载 ${loadedMb} / ${totalMb} MB · 正在解析模型…`:`${loadedMb} / ${totalMb} MB · ${percent}% · ${speedMb} MB/s · 预计剩余 ${formatLoadTime(remaining)}`:`已下载 ${loadedMb} MB · 正在读取模型…`;
+  $('#model-load-detail').textContent=total?percent===100?`模型已载入 ${totalMb} MB · 正在解析模型…`:`${loadedMb} / ${totalMb} MB · ${percent}% · ${speedMb} MB/s · 预计剩余 ${formatLoadTime(remaining)}`:`模型已载入 ${loadedMb} MB · 正在读取…`;
 }
 
 async function setupModel(){
