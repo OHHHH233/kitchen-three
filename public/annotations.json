@@ -1,0 +1,185 @@
+{
+  "version": 2,
+  "models": {
+    "1c56fc31a1c54ca66cedce4bc2faa82c8c0481031062d440cccade4d72d16053": {
+      "sections": {
+        "section1": [
+          {
+            "id": "13e51022-0626-46a5-be71-7f3c1affccb7",
+            "modelSha": "1c56fc31a1c54ca66cedce4bc2faa82c8c0481031062d440cccade4d72d16053",
+            "objectName": "一楼Floor.001",
+            "position": [
+              -0.5469587477261795,
+              -0.7000000476837158,
+              -0.034517411142452215
+            ],
+            "text": "厨房",
+            "note": "",
+            "color": "#40d600",
+            "fontSize": 25
+          },
+          {
+            "id": "b36f0dca-37e7-4f89-aae8-7032829738a8",
+            "modelSha": "1c56fc31a1c54ca66cedce4bc2faa82c8c0481031062d440cccade4d72d16053",
+            "objectName": "一楼Floor.001",
+            "position": [
+              -1.398963153513015,
+              -0.7000000476837156,
+              1.2714390858886495
+            ],
+            "text": "卫生间",
+            "note": "",
+            "color": "#00becc",
+            "fontSize": 20
+          }
+        ],
+        "section2": []
+      }
+    },
+    "d96fab03112d6ec6fe6ab65e4b3fa2c7ed3e3f50a1f64cee8afee4743f232700": {
+      "sections": {
+        "section1": [
+          {
+            "id": "13e51022-0626-46a5-be71-7f3c1affccb7",
+            "modelSha": "d96fab03112d6ec6fe6ab65e4b3fa2c7ed3e3f50a1f64cee8afee4743f232700",
+            "objectName": "一楼Floor.001",
+            "position": [
+              -0.5469587477261795,
+              -0.7000000476837158,
+              -0.034517411142452215
+            ],
+            "text": "厨房",
+            "note": "",
+            "color": "#40d600",
+            "fontSize": 25
+          },
+          {
+            "id": "b36f0dca-37e7-4f89-aae8-7032829738a8",
+            "modelSha": "d96fab03112d6ec6fe6ab65e4b3fa2c7ed3e3f50a1f64cee8afee4743f232700",
+            "objectName": "一楼Floor.001",
+            "position": [
+              -1.398963153513015,
+              -0.7000000476837156,
+              1.2714390858886495
+            ],
+            "text": "卫生间",
+            "note": "",
+            "color": "#00becc",
+            "fontSize": 20
+          }
+        ],
+        "section2": [],
+        "section3": []
+      }
+    },
+    "f3ac399486a118e8254fc488053c69f5b1d56c845f9bb9c33dd06382e14edaf3": {
+      "sections": {
+        "section1": [
+          {
+            "id": "13e51022-0626-46a5-be71-7f3c1affccb7",
+            "modelSha": "f3ac399486a118e8254fc488053c69f5b1d56c845f9bb9c33dd06382e14edaf3",
+            "objectName": "一楼Floor.001",
+            "position": [
+              -0.5469587477261795,
+              -0.7000000476837158,
+              -0.034517411142452215
+            ],
+            "text": "厨房",
+            "note": "",
+            "color": "#40d600",
+            "fontSize": 25
+          },
+          {
+            "id": "b36f0dca-37e7-4f89-aae8-7032829738a8",
+            "modelSha": "f3ac399486a118e8254fc488053c69f5b1d56c845f9bb9c33dd06382e14edaf3",
+            "objectName": "一楼Floor.001",
+            "position": [
+              -1.398963153513015,
+              -0.7000000476837156,
+              1.2714390858886495
+            ],
+            "text": "卫生间",
+            "note": "",
+            "color": "#00becc",
+            "fontSize": 20
+          }
+        ],
+        "section2": [],
+        "section3": []
+      }
+    },
+    "a4dc6f0d5671f73dac1d53466fbb9044405221853a03214cd7516dc9973afeb1": {
+      "sections": {
+        "section1": [
+          {
+            "id": "13e51022-0626-46a5-be71-7f3c1affccb7",
+            "modelSha": "a4dc6f0d5671f73dac1d53466fbb9044405221853a03214cd7516dc9973afeb1",
+            "objectName": "一楼Floor.001",
+            "position": [
+              -0.5469587477261795,
+              -0.7000000476837158,
+              -0.034517411142452215
+            ],
+            "text": "厨房",
+            "note": "",
+            "color": "#000000",
+            "fontSize": 12
+          },
+          {
+            "id": "b36f0dca-37e7-4f89-aae8-7032829738a8",
+            "modelSha": "a4dc6f0d5671f73dac1d53466fbb9044405221853a03214cd7516dc9973afeb1",
+            "objectName": "一楼Floor.001",
+            "position": [
+              -1.398963153513015,
+              -0.7000000476837156,
+              1.2714390858886495
+            ],
+            "text": "卫生间",
+            "note": "",
+            "color": "#1a1a1a",
+            "fontSize": 12
+          }
+        ],
+        "section2": [],
+        "section3": []
+      }
+    },
+    "498dd5e387027671ed686edc6b7ba1fc4c0f33e17fe75cd534cc112cc891c90d": {
+      "sections": {
+        "section1": [
+          {
+            "id": "13e51022-0626-46a5-be71-7f3c1affccb7",
+            "modelSha": "498dd5e387027671ed686edc6b7ba1fc4c0f33e17fe75cd534cc112cc891c90d",
+            "objectName": "一楼Floor.001",
+            "position": [
+              -0.5469587477261795,
+              -0.7000000476837158,
+              -0.034517411142452215
+            ],
+            "text": "厨房",
+            "note": "",
+            "color": "#000000",
+            "fontSize": 12
+          },
+          {
+            "id": "b36f0dca-37e7-4f89-aae8-7032829738a8",
+            "modelSha": "498dd5e387027671ed686edc6b7ba1fc4c0f33e17fe75cd534cc112cc891c90d",
+            "objectName": "一楼Floor.001",
+            "position": [
+              -1.398963153513015,
+              -0.7000000476837156,
+              1.2714390858886495
+            ],
+            "text": "卫生间",
+            "note": "",
+            "color": "#1a1a1a",
+            "fontSize": 12
+          }
+        ],
+        "section2": [],
+        "section3": []
+      }
+    }
+  },
+  "revision": "d445607ceb7f160acba2890c255d8b26df7086d3431f2bcc945b8b0e72fa2154"
+}

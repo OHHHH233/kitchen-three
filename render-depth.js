@@ -9,7 +9,7 @@ export function surfaceDepth(kind, rank=0, count=1) {
 }
 
 export function outlineMaterial(color, kind='hard') {
-  const material=new THREE.LineBasicMaterial({color,transparent:false,opacity:1,depthTest:true,depthWrite:false});
+  const material=new THREE.LineBasicMaterial({color,transparent:false,opacity:1,depthTest:true,depthWrite:false,depthFunc:THREE.LessEqualDepth});
   if(kind==='tile'){
     // POLYGON_OFFSET_FILL does not apply to GL_LINES. Give tile seams a small
     // clip-space bias, while retaining depth testing against actual occluders.

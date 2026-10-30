@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>家装厨房 · 尺寸研究</title>
+    <link rel="stylesheet" href="./styles.css?v=1.01" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./public/vendor/three/build/three.module.js",
+          "three/addons/": "./public/vendor/three/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand-lockup" href="./" aria-label="厨房空间首页"><span class="brand-mark">K.</span><span>厨房空间</span></a>
+      </header>
+      <section class="intro" aria-labelledby="page-title">
+        <span class="eyebrow">空间，恰如其分。</span>
+        <h1 id="page-title">厨房，每一寸都清晰。</h1>
+        <p>从整体到细节，轻松查看你的厨房设计。</p>
+        <span class="source-note"><span class="status-dot"></span><span id="source-date">Blender 实景模型</span></span>
+      </section>
+      <main class="workspace">
+        <aside class="step-nav" aria-label="厨房搭建顺序">
+          <nav id="step-list" class="step-list" aria-label="模型分区"></nav>
+          <span id="nav-count" hidden>01 / 05</span>
+        </aside>
+
+        <section class="viewer-column">
+          <div class="viewer-toolbar">
+            <div>
+              <span class="section-kicker">空间预览</span>
+              <h2 id="active-title">厨房整体</h2>
+            </div>
+          </div>
+          <div class="view-options">
+            <button type="button" id="section-toggle" class="overall-toggle" aria-pressed="true">墙体剖切</button>
+            <button type="button" id="edge-toggle" class="overall-toggle" aria-pressed="true">板件边缘</button>
+            <label class="annotation-option"><input id="annotation-switch" type="checkbox" checked /><span>尺寸</span></label>
+          </div>
+          <div class="viewer-frame" id="viewer-frame">
+            <div id="scene-canvas" class="scene-canvas" aria-label="厨房三维模型视图"></div>
+            <div id="annotation-layer" class="annotation-layer" aria-label="模型尺寸标注"></div>
+            <div id="elevation-map" class="elevation-map" aria-label="橱柜平面缩略图" hidden>
+              <div id="elevation-preview" class="elevation-preview" aria-label="橱柜真实模型顶视缩略图"></div>
+              <span id="cutaway-legend" class="cutaway-legend" hidden><i></i>18 mm 板件与踢脚线</span>
+            </div>
+            <div class="scene-badge"><span class="badge-line"></span><span id="scene-mode-label">透视 · 3D</span></div>
+            <div class="viewport-controls" aria-label="视图与标注控制">
+              <div class="viewport-modes" role="group" aria-label="模型视图">
+                <button type="button" class="segmented-btn active" data-view="3d" aria-pressed="true">3D</button>
+                <div class="viewport-orthographic" role="group" aria-label="立面视图与平面视图">
+                  <button type="button" class="segmented-btn" data-view="elevation" aria-pressed="false">立面</button>
+                  <button type="button" class="segmented-btn" data-view="top" aria-pressed="false">顶视</button>
+                </div>
+              </div>
+              <div id="elevation-actions" class="elevation-actions" role="group" aria-label="立面方向" hidden>
+                <label class="sr-only" for="elevation-select">立面方向</label>
+                <select id="elevation-select" aria-label="立面方向">
+                  <option value="window">靠窗</option>
+                  <option value="rice">炒菜</option>
+                  <option value="stove">煮饭</option>
+                </select>
+              </div>
+              <button type="button" class="icon-btn" id="reset-view" data-tooltip="重置视图" aria-label="重置视图">↺</button>
+            </div>
+            <div class="loading-state" id="loading-state">
+              <div class="loading-ring"></div>
+              <div>
+                <strong>正在载入 Blender 模型</strong>
+                <span id="loading-label">kitchen-overall.glb</span>
+              </div>
+            </div>
+            <div class="model-error" id="model-error" hidden>
+              <strong>模型暂时无法载入</strong>
+              <span>请检查本地服务，或点击重试。</span>
+              <small id="model-error-detail"></small>
+              <button type="button" id="retry-model" class="overall-toggle">重新载入</button>
+            </div>
+          </div>
+          <div class="viewer-footer">
+            <div class="camera-readout"><span class="readout-dot"></span><span id="camera-readout">相机：透视 · 自由查看</span></div>
+            <div class="viewer-hint">拖拽旋转 · 滚轮缩放 · 右键平移</div>
+          </div>
+        </section>
+
+      </main>
+      <footer class="page-footer"><span>为你的日常，精心规划。</span><span>尺寸读取自 Blender 标尺的局部 Y 轴 · 毫米</span></footer>
+    </div>
+    <script type="module" src="./app.js?v=1.01"></script>
+  </body>
+</html>
