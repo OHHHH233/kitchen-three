@@ -1,6 +1,6 @@
 :root { color-scheme:light; --ink:#202731; --muted:#77818c; --blue:#246bca; --line:#e3e7ec; --surface:#f5f7fa; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; color:var(--ink); background:#fff; }
 /* Dragging controls or drawings must not start a browser text selection. */
-.site-header,.section-navigation,#space-controls,.model-frame,.layout-toolbar,.drawing-host,.cutting-plan-grid,button{
+.site-header,.section-overview,.section-navigation,#space-controls,.model-frame,.layout-toolbar,.drawing-host,.cutting-plan-grid,button{
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
 }
 .model-frame input[type=text],.model-frame input:not([type]),.model-frame textarea,input[type=search],[contenteditable=true]{
@@ -213,6 +213,12 @@
 .section-navigation .section-link small{font-size:13px}
 .section-navigation .section-link .section-name{display:inline;color:inherit;font-size:inherit}
 .section-navigation .section-link .section-kind{display:inline;color:inherit;font-size:15px;opacity:.75}
+.section-overview{display:flex;align-items:center;gap:28px;margin:28px 0 24px}
+.section-overview .section-navigation{flex:0 0 auto;margin:0}
+.dimension-reference-note{flex:1;min-width:0;margin:0;color:#66717e;font-size:13px;line-height:1.9}
+.dimension-reference-note>span{display:block}
+.dimension-reference-note strong{color:#b43e3e;font-weight:500}
+@media(max-width:1200px){.section-overview{flex-direction:column;align-items:stretch;gap:12px}}
 @media(max-width:650px){
   .site-header .brand{font-size:18px}
   .site-header .brand b{font-size:27px}
@@ -221,6 +227,8 @@
   .section-navigation .section-link{display:grid;grid-template-columns:auto auto;justify-content:center;align-content:center;gap:4px 6px;min-width:0;padding:12px 6px;font-size:15px}
   .section-navigation .section-link small{display:inline;font-size:11px}
   .section-navigation .section-link .section-kind{grid-column:1/-1;font-size:11px;white-space:nowrap}
+  .section-overview{margin:20px 0 18px;gap:10px}
+  .dimension-reference-note{font-size:11px;line-height:1.8}
 }
 /* Shared settings layout for all three sections. */
 .space-section>.section-heading{min-height:0;display:block;margin-bottom:18px}
