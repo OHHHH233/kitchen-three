@@ -3,7 +3,8 @@ import {LineSegments2} from './public/vendor/three/examples/jsm/lines/LineSegmen
 import {LineSegmentsGeometry} from './public/vendor/three/examples/jsm/lines/LineSegmentsGeometry.js';
 import {LineMaterial} from './public/vendor/three/examples/jsm/lines/LineMaterial.js';
 
-// Screen-space widths remain conspicuous at room scale and while zooming.
+// Keep highlight widths in screen pixels. They remain conspicuous at room scale
+// without growing when the socket is far from the camera.
 export function createSocketOutline(edges){
   const geometry=new LineSegmentsGeometry().setPositions(edges.getAttribute('position').array);
   const group=new THREE.Group();group.name='socket-highlight-outline';group.userData.socketHighlight=true;
@@ -13,7 +14,7 @@ export function createSocketOutline(edges){
     material.customProgramCacheKey=()=> 'socket-bold-outline-v1';
     const line=new LineSegments2(geometry,material);line.renderOrder=411+index;
     line.raycast=()=>{};
-    line.onBeforeRender=renderer=>renderer.getSize(material.resolution);
+    line.onBeforeRender=(renderer,_scene,camera)=>{renderer.getSize(material.resolution);material.linewidth=width;};
     group.add(line);
   }
   return group;

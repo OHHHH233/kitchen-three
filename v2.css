@@ -270,3 +270,22 @@
   #space-controls .cabinet-controls fieldset label{font-size:9px;gap:2px}
   #space-controls .view-controls{justify-self:end;justify-content:flex-end}
 }
+/* V.1.12 visual system: warm beige frosted glass with charcoal text. */
+:root{--ink:#323232;--muted:#6f6864;--blue:#806e64;--line:rgba(50,50,50,.16);--surface:rgba(255,255,255,.48);--beige:#DDD0C8;--glass:rgba(255,255,255,.55)}
+html,body{background:linear-gradient(145deg,#eee5df 0%,#ddd0c8 52%,#f3ece7 100%);color:var(--ink)}
+body{font-size:14px;background-attachment:fixed}
+.site-header{height:88px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.34);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-radius:0 0 22px 22px}
+.site-header nav{font-size:14px;color:var(--ink)}
+.brand{font-size:19px}.brand b{font-size:31px}.version{font-size:12px;border-color:rgba(50,50,50,.2);background:rgba(255,255,255,.5);color:var(--ink);border-radius:10px}
+.section-overview{margin-top:30px}.section-link{border-color:var(--line);background:rgba(255,255,255,.52);border-radius:15px;font-size:16px;padding:17px 24px;box-shadow:0 8px 24px rgba(50,50,50,.06)}.section-link small{font-size:13px}.section-link .section-kind{font-size:14px}.section-link.active{background:var(--ink);border-color:var(--ink)}
+.dimension-reference-note{font-size:15px;color:var(--ink)}
+#space-controls,.model-frame,.layout-toolbar,.layout-workspace,.table-scroll,.cutting-plan-grid,.measurement-section,.layout-section{border-color:var(--line);background:rgba(255,255,255,.42);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:20px}
+#space-controls{padding:6px;border-radius:20px}.model-options,.view-controls,.annotation-toolbar,.model-thumbnail{border-color:var(--line);background:rgba(255,255,255,.62);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:16px}
+.option-button,.view-controls button,.view-controls select,.surface-label select,.drawing-controls button,.download-button{border-color:var(--line);background:rgba(255,255,255,.55);color:var(--ink);border-radius:11px;font-size:13px;padding:10px 14px}.option-button[aria-pressed=true],.view-controls button.active{background:var(--beige);color:var(--ink);border-color:rgba(50,50,50,.22)}
+.view-controls{position:absolute;right:20px;bottom:20px;min-height:92px;min-width:0;width:100%;max-width:420px;padding:12px;gap:8px;box-shadow:0 10px 30px rgba(50,50,50,.12)}.view-controls button{font-size:14px;padding:12px 16px}.view-controls select{font-size:13px}
+.model-frame{border-radius:22px;background:rgba(255,255,255,.26)}.model-label{font-size:12px;border-radius:7px;background:rgba(255,255,255,.72);color:var(--ink)}
+.layout-toolbar{padding:12px}.layout-workspace{overflow:hidden}.drawing-host,.cutting-plan-grid{background:rgba(255,255,255,.3)}
+.tile-type-switch,.tile-group-controls{border-color:var(--line);background:rgba(255,255,255,.48);border-radius:13px}.tile-type-switch button,.tile-group-controls button{font-size:13px;padding:10px 13px;color:var(--ink);border-radius:9px}.tile-type-switch button[aria-pressed="true"],.tile-group-controls button[aria-pressed="true"]{background:var(--beige);color:var(--ink)}
+input[type=checkbox]{accent-color:#806e64}
+.site-footer{border-color:var(--line);font-size:12px;color:#625b57}
+@media(max-width:650px){body{font-size:15px}.site-header{height:72px;border-radius:0 0 18px 18px}.site-header nav{font-size:12px}.site-header nav a{display:none}.brand{font-size:20px}.brand b{font-size:29px}.section-overview{gap:13px}.section-navigation .section-link{font-size:16px;padding:14px 7px;border-radius:13px}.section-navigation .section-link small{font-size:12px}.section-navigation .section-link .section-kind{font-size:12px}.dimension-reference-note{font-size:13px}.model-frame{border-radius:20px}.model-label{font-size:12px;padding:5px 6px}.view-controls{position:absolute;right:12px;bottom:12px;min-width:0;min-height:0;width:calc(100% - 24px);justify-content:center;padding:8px;border-radius:15px}.view-controls button{font-size:12px;padding:10px 11px}.option-button,.drawing-controls button,.download-button{font-size:12px;padding:9px 11px}.space-controls .cabinet-controls fieldset label,.space-controls .opacity-control>span:first-child{font-size:12px}.space-controls .opacity-control output{font-size:12px}.tile-type-switch button,.tile-group-controls button{font-size:12px;padding:9px 10px}.layout-toolbar{border-radius:16px}.site-footer{font-size:11px}}
