@@ -1,17 +1,17 @@
-import {createSocketOutline} from './socket-outline.js?v=1.07';
-import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.07';
+import {createSocketOutline} from './socket-outline.js?v=1.08';
+import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.08';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.07';
-import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection,keepNearAxisDimensions} from './v2-math.js?v=1.07';
-import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.07';
-import {dedupeTopViewDimensions} from './scene-math.js?v=1.07';
-import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.07';
-import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.07';
-import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.07';
-import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.07';
-import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.07';
+import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.08';
+import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.08';
+import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.08';
+import {dedupeTopViewDimensions} from './scene-math.js?v=1.08';
+import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.08';
+import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.08';
+import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.08';
+import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.08';
+import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.08';
 
 const $=s=>document.querySelector(s), ns='http://www.w3.org/2000/svg';
 const state={section:1,cabinetVisible:true,wallCabinetVisible:true,cabinetDimensions:true,wallCabinetDimensions:true,cabinetDoorsVisible:false,wallCabinetDoorsVisible:false,cabinetTransparency:70,floor2HardVisible:true,floor2SoftVisible:false,floor2Transparency:0,floor2TileType:'800',view:'3d',perspectivePreset:null,direction:'front',edges:true,socketHighlights:{1:true,3:true},dimensions:true,tileFocus:true,ceilingVisible:false,contextTransparency:0,baseTransparency:0,tileTransparency:0,selectedRuler:null,selectedTile:null,surface:null};
@@ -258,9 +258,9 @@ function applyPresentation(){
   $('#direction').hidden=state.view!=='elevation';$('#model-thumbnail').hidden=state.view!=='elevation';
   annotationLayoutDirty=true;
   document.querySelectorAll('[data-view]').forEach(button=>{const active=button.dataset.view===state.view&&!(button.dataset.view==='3d'&&state.perspectivePreset);button.classList.toggle('active',active);button.setAttribute('aria-pressed',active);});
-  const presetActive=state.view==='3d'&&Boolean(state.perspectivePreset);$('#camera-preset-toggle').hidden=secondFloor;$('#camera-preset-2-toggle').hidden=secondFloor;$('#camera-preset-toggle').classList.toggle('active',presetActive&&state.perspectivePreset==='Camera_01');$('#camera-preset-toggle').setAttribute('aria-pressed',presetActive&&state.perspectivePreset==='Camera_01');$('#camera-preset-2-toggle').classList.toggle('active',presetActive&&state.perspectivePreset==='Camera_02');$('#camera-preset-2-toggle').setAttribute('aria-pressed',presetActive&&state.perspectivePreset==='Camera_02');
+  const presetActive=state.view==='3d'&&Boolean(state.perspectivePreset);$('#camera-preset-toggle').hidden=state.section!==2;$('#camera-preset-2-toggle').hidden=state.section!==2;$('#camera-preset-toggle').classList.toggle('active',presetActive&&state.perspectivePreset==='Camera_01');$('#camera-preset-toggle').setAttribute('aria-pressed',presetActive&&state.perspectivePreset==='Camera_01');$('#camera-preset-2-toggle').classList.toggle('active',presetActive&&state.perspectivePreset==='Camera_02');$('#camera-preset-2-toggle').setAttribute('aria-pressed',presetActive&&state.perspectivePreset==='Camera_02');
   const directionName=$('#direction').selectedOptions[0].textContent;
-  $('#mode-label').textContent=state.view==='3d'?(state.perspectivePreset==='Camera_02'?'透视视角二':state.perspectivePreset==='Camera_01'?'透视视角':secondFloor?'透视 · 二楼':context?'透视 · 橱柜吊柜区':focus?'透视 · 铺贴突出显示':'透视 · 3D'):state.view==='top'?'正交 · 顶视':`正交 · ${directionName}`;
+  $('#mode-label').textContent=state.view==='3d'?(state.perspectivePreset==='Camera_02'?'吊柜透视尺寸':state.perspectivePreset==='Camera_01'?'橱柜透视尺寸':secondFloor?'透视 · 二楼':context?'透视 · 橱柜吊柜区':focus?'透视 · 铺贴突出显示':'透视 · 3D'):state.view==='top'?'正交 · 顶视':`正交 · ${directionName}`;
   const visibleBase=new Set(meshEntries.filter(e=>e.mesh.visible&&e.mesh.userData.section===1).map(e=>e.name));const visibleCabinets=new Set(meshEntries.filter(e=>e.mesh.visible&&e.mesh.userData.section>1).map(e=>e.name));
   $('#model-canvas').dataset.view=state.view;$('#model-canvas').dataset.section=String(state.section);$('#model-canvas').dataset.visibleBase=String(visibleBase.size);$('#model-canvas').dataset.visibleCabinets=String(visibleCabinets.size);$('#model-canvas').dataset.loaded='section'+state.section;
   $('#model-hint').textContent=state.view==='3d'?'拖拽旋转 · 滚轮缩放 · 右键平移 · 手机轻点放大':'滚轮缩放 · 右键平移 · 手机轻点放大';
@@ -297,15 +297,16 @@ function setView(view){state.view=view;state.perspectivePreset=null;applyPresent
 function setPerspectiveView(){setPerspectivePreset('Camera_01');}
 function setPerspectiveView2(){setPerspectivePreset('Camera_02');}
 function setPerspectivePreset(name){
-  if(state.section===3)return;
+  if(state.section!==2)return;
   state.view='3d';state.perspectivePreset=name;
   if(name==='Camera_02'){
     state.cabinetVisible=false;state.cabinetDimensions=false;state.cabinetDoorsVisible=false;
-    state.wallCabinetVisible=true;state.wallCabinetDimensions=true;state.wallCabinetDoorsVisible=false;
-    state.cabinetTransparency=100;state.baseTransparency=0;
+    state.wallCabinetVisible=true;state.wallCabinetDimensions=true;state.wallCabinetDoorsVisible=true;
+    state.cabinetTransparency=0;state.baseTransparency=100;
   }else{
     state.cabinetVisible=true;state.cabinetDimensions=true;state.cabinetDoorsVisible=false;
     state.wallCabinetVisible=false;state.wallCabinetDimensions=false;state.wallCabinetDoorsVisible=false;
+    state.cabinetTransparency=70;state.baseTransparency=100;
   }
   applyPresentation();renderModelLabels();frameCamera();
 }
@@ -313,12 +314,7 @@ function setPerspectivePreset(name){
 function renderModelLabels(){
   const host=$('#model-annotations');host.replaceChildren();labels=[];lineSvg=element('svg',{'aria-hidden':'true'});host.append(lineSvg);if(state.section===1&&!state.dimensions)return;
   const sourceDimensions=state.section===1?data.dimensions:visibleDimensions();
-  const cameraPreset=cameraPresets[state.perspectivePreset];
-  const cameraForward=cameraPreset?.target.clone().sub(cameraPreset.position).normalize();
-  const cameraDimensions=cameraPreset&&cameraForward?keepNearAxisDimensions(sourceDimensions,'Z',d=>{
-    const midpoint=toThree(d.endpoints[0]).add(toThree(d.endpoints[1])).multiplyScalar(.5);
-    return midpoint.sub(cameraPreset.position).dot(cameraForward);
-  },.6):sourceDimensions;
+  const cameraDimensions=sourceDimensions;
   const dimensions=state.view==='top'?dedupeTopViewDimensions(cameraDimensions):cameraDimensions.filter(d=>dimensionVisible(d,state.view,state.direction));
   for(const d of dimensions){
     const label=document.createElement('span');label.className='model-label'+(d.value<.1?' short-dimension':'')+(state.selectedRuler===d.id?' selected':'');label.textContent=mm(d.value*1000)+' mm';label.setAttribute('aria-label',d.id+' '+label.textContent);label.title=d.id;host.append(label);
@@ -565,7 +561,7 @@ function setSection(section){
   $('#surface-select').hidden=section===3;
   $('.tile-type-switch').hidden=section!==3;
   document.querySelectorAll('button[data-section]').forEach(button=>{const active=Number(button.dataset.section)===section;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-  document.title=`O.家庭装修 V.1.07 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
+  document.title=`O.家庭装修 V.1.08 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
   $('#layout').hidden=section===2;document.querySelector('nav a[href="#layout"]').hidden=section===2;$('#original-cutting').hidden=section===2;
   if(section===3)selectFloor2TileType('800');else if(section===1)selectSurface('floor');
   $('#layout-title').textContent=section===3?`二楼瓷砖铺贴平面图 · ${state.floor2TileType==='800'?'800×800':'1500×750'}`:'铺贴排版平面图';$('#layout .section-heading .eyebrow').textContent=section===3?'03 / 独立排版图':'02 / 独立排版图';
@@ -577,7 +573,7 @@ function setSection(section){
   $('#measurement-title').textContent=section===1?'硬装尺寸':section===2?'橱柜吊柜尺寸':'二楼尺寸';
   $('#measurements .section-description').textContent=section===3&&!data.floor2Dimensions?.length?'二楼集合中没有单独的尺寸标尺。':`以下为源工程中的${sectionLabel}标尺；点击一行在模型中高亮。顶视只显示 X、Y 方向且不小于 100 mm 的尺寸。`;
   $('#model-canvas').setAttribute('aria-label',section===1?'一楼硬装三维视图':section===2?'橱柜吊柜区与一楼硬装三维视图':'二楼模型三维视图');
-  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.07`;
+  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.08`;
   const url=new URL(location);if(section===1)url.searchParams.delete('section');else url.searchParams.set('section',section);history.replaceState(null,'',url);
   applyPresentation();renderModelLabels();renderRulerTable();frameCamera();updateThumbnail();
 }
