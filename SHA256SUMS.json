@@ -6,7 +6,7 @@
   "cabinet-materials.js": "5b59166efa031d975cc7a4952cfd577edb14886ae805b6d2ddfa0a56a05a0e53",
   "cabinet-regions.js": "250945d601c6769e68fde57a98a3bce07442e62a691b6e2e730a30747c347c61",
   "cutting-geometry.js": "afb405663b5567d8b7781bf5b95ea8d9eed99df64a118ee22babfdcd137c68a9",
-  "index.html": "d9b81099f420b8e85a390d9ba9881edf2c8df73ba74daa3c18220886e60b87f1",
+  "index.html": "458f1da09293d19efd4d2d9af00f3a9f178d33229179c9627529233c579763fa",
   "package.json": "b392ade7d0369029f4507b4ff0aa198096c38582f439ee0f20e5b1fadb5bca5f",
   "panel-edges.js": "fb8a033735df9a4efa5b27eea236679294584f5d5c371e38ac1ec0e30afe22de",
   "public/annotations.json": "6caa30c6e3a9e660d224e6244c52de9dc982d7771f41c04ce64b305ac4df24bc",
@@ -45,8 +45,8 @@
   "tile-presentation.js": "79154adc2ebc9cea0ad76b41f500d854920d554d18ee13c82fa1cb4e3d1ff471",
   "ui-layout.css": "6f5bbd687e6482fe5b6b938bc1cefac2ca0c9bba492acac31a1c2627e4172ac2",
   "v1.html": "eff25a2fa47f673e3a5872d60a067d09c19c559b0dc85acb56d7624f48af9619",
-  "v2-app.js": "e678da564bc626a531d997b0e01ee9dae720c784cc6e35ea725255e11f0dba7a",
+  "v2-app.js": "15d6ca24c903f27cb193c7197a656529f91babc1b23606bf4085af8729358b44",
   "v2-math.js": "b7874a9170cf6acab683573661a8e18d161fc6731579f8e2dbfdc681ae9b4b57",
-  "v2.css": "13e5c39a23ff9ea5b91a6df28cd5ceb80d3cd2cc3570fa5195c5bbdbbeff0bb5",
+  "v2.css": "58118b521ee98298c0fdd26cc84b5063e5e99b922b1ae3d6e54196baea6f97e2",
   "v2.html": "7280c79bf616f5cbea1a2de32a2c9f7243972d8639ba01d1f43fb92f7c136b91"
 }
