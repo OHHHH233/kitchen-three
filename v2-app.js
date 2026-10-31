@@ -1,17 +1,17 @@
-import {createSocketOutline} from './socket-outline.js?v=1.15';
-import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.15';
+import {createSocketOutline} from './socket-outline.js?v=1.16';
+import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.16';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.15';
-import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.15';
-import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.15';
-import {dedupeTopViewDimensions} from './scene-math.js?v=1.15';
-import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.15';
-import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.15';
-import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.15';
-import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.15';
-import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.15';
+import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.16';
+import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.16';
+import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.16';
+import {dedupeTopViewDimensions} from './scene-math.js?v=1.16';
+import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.16';
+import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.16';
+import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.16';
+import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.16';
+import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.16';
 
 const $=s=>document.querySelector(s), ns='http://www.w3.org/2000/svg';
 const isHostedRelease=/(?:^|\.)github\.io$/i.test(location.hostname);

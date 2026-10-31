@@ -12,6 +12,8 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border:0;border-radiu
 #space-controls .settings-heading{font-weight:600;white-space:nowrap}
 #space-controls .opacity-control{min-width:0!important}
 #space-controls .opacity-control input[type=range]{appearance:auto!important;-webkit-appearance:auto!important;height:24px;background:transparent!important;accent-color:#323232!important}
+#layout>.section-heading,#original-cutting>.section-heading,#measurements>.section-heading{padding-inline:clamp(16px,2vw,28px)}
+#layout>.section-heading h2,#original-cutting>.section-heading h2,#measurements>.section-heading h2{overflow-wrap:anywhere}
 .github-release #annotation-toolbar,.github-release #annotation-editor,.github-release #shared-annotations{display:none!important}
 @media(max-width:1000px){
   #space-controls{grid-template-columns:1fr!important;grid-template-areas:"settings" "views"!important}
