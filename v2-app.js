@@ -1,19 +1,20 @@
-import {createSocketOutline} from './socket-outline.js?v=1.14';
-import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.14';
+import {createSocketOutline} from './socket-outline.js?v=1.15';
+import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.15';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.14';
-import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.14';
-import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.14';
-import {dedupeTopViewDimensions} from './scene-math.js?v=1.14';
-import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.14';
-import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.14';
-import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.14';
-import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.14';
-import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.14';
+import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.15';
+import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.15';
+import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.15';
+import {dedupeTopViewDimensions} from './scene-math.js?v=1.15';
+import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.15';
+import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.15';
+import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.15';
+import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.15';
+import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.15';
 
 const $=s=>document.querySelector(s), ns='http://www.w3.org/2000/svg';
+const isHostedRelease=/(?:^|\.)github\.io$/i.test(location.hostname);
 const state={section:1,cabinetVisible:true,wallCabinetVisible:true,cabinetDimensions:true,wallCabinetDimensions:true,cabinetDoorsVisible:false,wallCabinetDoorsVisible:false,cabinetTransparency:70,floor2HardVisible:true,floor2SoftVisible:false,floor2Transparency:0,floor2TileType:'1200',view:'3d',perspectivePreset:null,direction:'front',edges:true,socketHighlights:{1:true,3:true},dimensions:true,tileFocus:true,ceilingVisible:false,contextTransparency:0,baseTransparency:0,tileTransparency:0,selectedRuler:null,selectedTile:null,surface:null};
 let data,section1Dimensions,section1Surfaces,renderer,controls,camera,model,modelBounds,cameraPresets={},offset,previewRenderer,previewCamera;
 const scene=new THREE.Scene(),root=new THREE.Group(),tileRoot=new THREE.Group();
@@ -22,6 +23,14 @@ const perspective=new THREE.PerspectiveCamera(42,1,.01,250),ortho=new THREE.Orth
 const raycaster=new THREE.Raycaster();let layoutDirty=true,focus=null,labels=[],lineSvg,meshEntries=[],edgeEntries=[];
 let sharedAnnotations=[],annotationPlacement=false,annotationDraft=null,annotationEditingId=null,annotationLayoutDirty=true,annotationDocument={version:2,models:{}};
 const mobile=matchMedia('(max-width:650px)'),reduced=matchMedia('(prefers-reduced-motion:reduce)');
+document.documentElement.classList.toggle('github-release',isHostedRelease);
+function syncRangeVisual(input){
+  if(!input||input.type!=='range')return;
+  const min=Number(input.min||0),max=Number(input.max||100),value=Number(input.value||0);
+  const progress=max>min?Math.max(0,Math.min(100,(value-min)/(max-min)*100)):0;
+  input.style.setProperty('--range-progress',`${progress}%`);
+}
+function syncAllRanges(){document.querySelectorAll('input[type="range"]').forEach(syncRangeVisual);}
 function element(tag,attrs={}){const e=document.createElementNS(ns,tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);return e;}
 function toThree(p){return new THREE.Vector3(p[0],p[2],-p[1]).add(offset||new THREE.Vector3());}
 function saveFile(text,type,name){const url=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);}
@@ -64,6 +73,13 @@ function layoutAnnotationMarkers(){
   });
 }
 async function loadAnnotations(){
+  if(isHostedRelease){
+    annotationDocument={version:2,models:{}};sharedAnnotations=[];
+    $('#annotation-toolbar')?.setAttribute('hidden','');$('#annotation-editor').hidden=true;
+    $('#shared-annotations').replaceChildren();annotationLayoutDirty=false;
+    annotationMessage('线上版本不显示本地标注。');
+    return;
+  }
   try{const response=await fetch('./public/annotations.json',{cache:'no-store'});if(response.ok)annotationDocument=await response.json();}
   catch{annotationDocument={version:2,models:{}};}
   if(!annotationDocument||typeof annotationDocument!=='object')annotationDocument={version:2,models:{}};
@@ -251,6 +267,7 @@ function applyPresentation(){
   $('#floor2-hard-visible').checked=state.floor2HardVisible;$('#floor2-soft-visible').checked=state.floor2SoftVisible;
   for(const [id,visible] of [['cabinet-visible',state.cabinetVisible],['cabinet-dimensions',state.cabinetDimensions],['cabinet-doors',state.cabinetDoorsVisible],['wall-cabinet-visible',state.wallCabinetVisible],['wall-cabinet-dimensions',state.wallCabinetDimensions],['wall-cabinet-doors',state.wallCabinetDoorsVisible]])$('#'+id).checked=visible;
   $('#cabinet-transparency').value=state.cabinetTransparency;$('#cabinet-transparency-value').value=state.cabinetTransparency+'%';$('#cabinet-transparency').setAttribute('aria-valuetext',state.cabinetTransparency+'% 透明');
+  syncAllRanges();
   $('#model-canvas').dataset.doorsVisible=String(state.cabinetDoorsVisible||state.wallCabinetDoorsVisible);
   $('#model-canvas').dataset.cabinetTransparency=String(state.cabinetTransparency);
   $('#edges-toggle').setAttribute('aria-pressed',state.edges);
@@ -568,7 +585,7 @@ function setSection(section){
   $('#surface-select').hidden=section===3;
   $('.tile-type-switch').hidden=section!==3;
   document.querySelectorAll('button[data-section]').forEach(button=>{const active=Number(button.dataset.section)===section;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-  document.title=`O.家庭装修 V.1.14 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
+  document.title=`O.家庭装修 V.1.15 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
   $('#layout').hidden=section===2;document.querySelector('nav a[href="#layout"]').hidden=section===2;$('#original-cutting').hidden=section===2;
   if(section===3)selectFloor2TileType('1200');else if(section===1)selectSurface('floor');
   $('#layout-title').textContent=section===3?`二楼瓷砖铺贴平面图 · ${floor2TileLabel(state.floor2TileType)}`:'铺贴排版平面图';$('#layout .section-heading .eyebrow').textContent=section===3?'03 / 独立排版图':'02 / 独立排版图';
@@ -580,7 +597,7 @@ function setSection(section){
   $('#measurement-title').textContent=section===1?'硬装尺寸':section===2?'橱柜吊柜尺寸':'二楼尺寸';
   $('#measurements .section-description').textContent=section===3&&!data.floor2Dimensions?.length?'二楼集合中没有单独的尺寸标尺。':`以下为源工程中的${sectionLabel}标尺；点击一行在模型中高亮。顶视只显示 X、Y 方向且不小于 100 mm 的尺寸。`;
   $('#model-canvas').setAttribute('aria-label',section===1?'一楼硬装三维视图':section===2?'橱柜吊柜区与一楼硬装三维视图':'二楼模型三维视图');
-  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.14`;
+  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.15`;
   const url=new URL(location);if(section===1)url.searchParams.delete('section');else url.searchParams.set('section',section);history.replaceState(null,'',url);
   applyPresentation();renderModelLabels();renderRulerTable();frameCamera();updateThumbnail();
 }
@@ -588,11 +605,11 @@ function setSection(section){
 function bindEvents(){
   document.querySelectorAll('button[data-section]').forEach(button=>button.addEventListener('click',()=>setSection(Number(button.dataset.section))));
   for(const [id,key] of [['cabinet-visible','cabinetVisible'],['cabinet-dimensions','cabinetDimensions'],['cabinet-doors','cabinetDoorsVisible'],['wall-cabinet-visible','wallCabinetVisible'],['wall-cabinet-dimensions','wallCabinetDimensions'],['wall-cabinet-doors','wallCabinetDoorsVisible']])$('#'+id).addEventListener('change',e=>{state[key]=e.target.checked;applyPresentation();if(id.endsWith('dimensions'))renderModelLabels();if(id.endsWith('visible'))frameCamera();});
-  $('#cabinet-transparency').addEventListener('input',e=>{state.cabinetTransparency=Number(e.target.value);applyPresentation();});
+  $('#cabinet-transparency').addEventListener('input',e=>{syncRangeVisual(e.target);state.cabinetTransparency=Number(e.target.value);applyPresentation();});
   $('#socket-highlight-toggle').addEventListener('change',e=>{state.socketHighlights[state.section]=e.target.checked;applyPresentation();});
   $('#ceiling-toggle').addEventListener('click',()=>{state.ceilingVisible=!state.ceilingVisible;applyPresentation();});
   $('#tile-focus-toggle').addEventListener('click',()=>{state.tileFocus=!state.tileFocus;applyPresentation();frameCamera();});
-  $('#context-transparency').addEventListener('input',e=>{if(state.section===3)state.floor2Transparency=Number(e.target.value);else if(state.section===2)state.baseTransparency=Number(e.target.value);else state.contextTransparency=Number(e.target.value);applyPresentation();});
+  $('#context-transparency').addEventListener('input',e=>{syncRangeVisual(e.target);if(state.section===3)state.floor2Transparency=Number(e.target.value);else if(state.section===2)state.baseTransparency=Number(e.target.value);else state.contextTransparency=Number(e.target.value);applyPresentation();});
   $('#floor2-hard-visible').addEventListener('change',e=>{state.floor2HardVisible=e.target.checked;applyPresentation();frameCamera();});
   $('#floor2-soft-visible').addEventListener('change',e=>{state.floor2SoftVisible=e.target.checked;applyPresentation();frameCamera();});
   document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));$('#camera-preset-toggle').addEventListener('click',setPerspectiveView);$('#camera-preset-2-toggle').addEventListener('click',setPerspectiveView2);$('#direction').addEventListener('change',e=>{state.direction=e.target.value;setView('elevation');});
@@ -604,8 +621,8 @@ $('#edges-toggle').addEventListener('click',()=>{state.edges=!state.edges;applyP
   svg.addEventListener('pointerdown',e=>{if(e.button!==0)return;dragStart={id:e.pointerId,x:e.clientX,y:e.clientY,view:{...drawView},moved:false};});svg.addEventListener('pointermove',e=>{if(!dragStart||dragStart.id!==e.pointerId)return;const dx=e.clientX-dragStart.x,dy=e.clientY-dragStart.y;if(Math.hypot(dx,dy)>5){dragStart.moved=true;svg.setPointerCapture(e.pointerId);}if(!dragStart.moved)return;const r=svg.getBoundingClientRect();drawView={...dragStart.view,x:dragStart.view.x-dx/r.width*dragStart.view.w,y:dragStart.view.y-dy/r.height*dragStart.view.h};setDrawingView();});svg.addEventListener('pointerup',()=>dragStart=null);svg.addEventListener('pointercancel',()=>dragStart=null);
   $('#download-csv').addEventListener('click',()=>saveFile(scheduleCsv(state.section>1?{...data,surfaces:[]}:data),'text/csv;charset=utf-8',`${data.section}_全部尺寸_2.0.csv`));
   $('#annotation-mode').addEventListener('click',event=>{annotationPlacement=!annotationPlacement;event.currentTarget.setAttribute('aria-pressed',String(annotationPlacement));event.currentTarget.textContent=annotationPlacement?'取消标注':'＋ 标注';if(annotationPlacement){annotationEditingId=null;annotationDraft=null;$('#annotation-editor').hidden=true;startAnnotationPlacement();}else{renderer.domElement.classList.remove('placing-annotation');annotationMessage('选点已取消。');}});
-  $('#annotation-default-size').addEventListener('input',event=>{$('#annotation-default-size-value').value=event.target.value;});
-  $('#annotation-size').addEventListener('input',event=>{$('#annotation-size-value').value=event.target.value;});
+  $('#annotation-default-size').addEventListener('input',event=>{syncRangeVisual(event.target);$('#annotation-default-size-value').value=event.target.value;});
+  $('#annotation-size').addEventListener('input',event=>{syncRangeVisual(event.target);$('#annotation-size-value').value=event.target.value;});
   $('#annotation-editor-close').addEventListener('click',()=>{$('#annotation-editor').hidden=true;annotationEditingId=null;annotationDraft=null;});
   $('#annotation-reposition').addEventListener('click',()=>{$('#annotation-editor').hidden=true;startAnnotationPlacement();});
   $('#annotation-delete').addEventListener('click',()=>{if(!annotationEditingId||!confirm('删除这条本机标注？'))return;sharedAnnotations=sharedAnnotations.filter(item=>item.id!==annotationEditingId);annotationEditingId=null;annotationDraft=null;$('#annotation-editor').hidden=true;persistLocalAnnotations();});
@@ -627,5 +644,7 @@ async function boot(){
   }catch(error){console.error(error);$('#model-loading').hidden=true;$('#model-error').hidden=false;$('#error-detail').textContent=error.message;}
 }
 void boot();
+
+
 
 

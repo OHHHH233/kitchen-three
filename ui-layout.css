@@ -1,0 +1,36 @@
+/* UI layout framework: edit this file to rearrange regions without touching model logic. */
+:root{--ui-gap:12px;--ui-card-radius:18px;--range-track:#b8afa9;--range-progress:#323232;--range-thumb:#323232}
+input[type=range]{appearance:auto!important;-webkit-appearance:auto!important;height:24px;background:transparent!important;accent-color:#323232!important}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:var(--range-track)!important}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-6px;border:0;border-radius:50%;background:var(--range-thumb);box-shadow:0 1px 4px rgba(50,50,50,.25)}
+input[type=range]::-moz-range-track{height:6px;border:0;border-radius:999px;background:transparent!important}
+input[type=range]::-moz-range-progress{height:6px;border:0;border-radius:999px;background:transparent!important}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border:0;border-radius:50%;background:var(--range-thumb)}
+#space-controls{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(260px,320px)!important;grid-template-areas:"settings views"!important;gap:var(--ui-gap)!important;align-items:stretch!important;padding:8px!important}
+#space-controls>.model-options{grid-area:settings!important;display:grid!important;min-width:0!important;width:100%!important;margin:0!important;overflow:visible!important;border-radius:var(--ui-card-radius)!important}
+#space-controls>.view-controls{grid-area:views!important;position:static!important;width:100%!important;min-width:0!important;max-width:none!important;margin:0!important;align-self:stretch!important;justify-self:stretch!important;border-radius:var(--ui-card-radius)!important}
+#space-controls .settings-heading{font-weight:600;white-space:nowrap}
+#space-controls .opacity-control{min-width:0!important}
+#space-controls .opacity-control input[type=range]{appearance:auto!important;-webkit-appearance:auto!important;height:24px;background:transparent!important;accent-color:#323232!important}
+.github-release #annotation-toolbar,.github-release #annotation-editor,.github-release #shared-annotations{display:none!important}
+@media(max-width:1000px){
+  #space-controls{grid-template-columns:1fr!important;grid-template-areas:"settings" "views"!important}
+  #space-controls>.model-options,#space-controls>.view-controls{width:100%!important}
+}
+@media(max-width:650px){
+  #space-controls{gap:10px!important;padding:8px!important}
+  #space-controls>.model-options{grid-template-columns:1fr 1fr!important;gap:10px!important;padding:13px!important}
+  #space-controls .settings-heading,#space-controls .settings-primary,#space-controls .settings-secondary{grid-column:1/-1!important}
+  #space-controls .settings-primary,#space-controls .settings-secondary{justify-content:flex-start!important;flex-wrap:wrap!important}
+  #space-controls>.view-controls{min-height:72px!important;padding:8px!important}
+  #space-controls>.view-controls button{flex:1 1 68px!important;min-width:0!important}
+}
+.ui-layout-guide{display:none}
+
+
+
+
+
+
+
+
