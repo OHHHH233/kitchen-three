@@ -1,17 +1,17 @@
-import {createSocketOutline} from './socket-outline.js?v=1.12';
-import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.12';
+import {createSocketOutline} from './socket-outline.js?v=1.13';
+import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.13';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.12';
-import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.12';
-import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.12';
-import {dedupeTopViewDimensions} from './scene-math.js?v=1.12';
-import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.12';
-import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.12';
-import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.12';
-import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.12';
-import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.12';
+import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.13';
+import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.13';
+import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.13';
+import {dedupeTopViewDimensions} from './scene-math.js?v=1.13';
+import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.13';
+import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.13';
+import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.13';
+import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.13';
+import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.13';
 
 const $=s=>document.querySelector(s), ns='http://www.w3.org/2000/svg';
 const state={section:1,cabinetVisible:true,wallCabinetVisible:true,cabinetDimensions:true,wallCabinetDimensions:true,cabinetDoorsVisible:false,wallCabinetDoorsVisible:false,cabinetTransparency:70,floor2HardVisible:true,floor2SoftVisible:false,floor2Transparency:0,floor2TileType:'1200',view:'3d',perspectivePreset:null,direction:'front',edges:true,socketHighlights:{1:true,3:true},dimensions:true,tileFocus:true,ceilingVisible:false,contextTransparency:0,baseTransparency:0,tileTransparency:0,selectedRuler:null,selectedTile:null,surface:null};
@@ -475,14 +475,17 @@ function renderCuttingPlan(){
   const isWholeStock=stock=>stock.placements.length===1&&pieceMap.get(stock.placements[0].id)?.cuttingClass==='full'&&Math.abs(stock.placements[0].x)<.01&&Math.abs(stock.placements[0].y)<.01&&Math.abs(stock.placements[0].w-stockW)<.01&&Math.abs(stock.placements[0].h-stockH)<.01;
   const wholeStocks=plan.stocks.filter(isWholeStock),cutStocks=plan.stocks.filter(stock=>!isWholeStock(stock));
   pageGrid.style.setProperty('--cutting-rows',Math.max(5,Math.ceil((cutStocks.length+(wholeStocks.length?1:0))/8)));
-  if(wholeStocks.length){
-    const card=document.createElement('article');card.className='cutting-plan-card full-tile-summary';
+  {
+    const card=document.createElement('article');card.className='cutting-plan-card full-tile-summary'+(wholeStocks.length?'':' empty-full-tile-summary');
     const wholeIds=wholeStocks.map(stock=>stock.placements[0].id);card.dataset.tileIds=wholeIds.join(',');card.title=`完整瓷砖对应铺贴序号：${wholeIds.join('、')}`;
     const heading=document.createElement('h3');heading.textContent=`完整瓷砖 × ${wholeStocks.length}`;card.append(heading);
-    const svg=element('svg',{viewBox:`-24 -24 ${stockW+48} ${stockH+48}`,role:'img','aria-label':`完整瓷砖，共${wholeStocks.length}块`});
-    const title=element('title');title.textContent=card.title;svg.append(title);
-    svg.append(element('rect',{x:0,y:0,width:stockW,height:stockH,class:'stock-sheet'}));
-    card.append(svg);pageGrid.append(card);
+    if(wholeStocks.length){
+      const svg=element('svg',{viewBox:`-24 -24 ${stockW+48} ${stockH+48}`,role:'img','aria-label':`完整瓷砖，共${wholeStocks.length}块`});
+      const title=element('title');title.textContent=card.title;svg.append(title);
+      svg.append(element('rect',{x:0,y:0,width:stockW,height:stockH,class:'stock-sheet'}));
+      card.append(svg);
+    }else{const empty=document.createElement('p');empty.textContent='当前排版没有整砖，全部为切割面。';card.append(empty);}
+    pageGrid.append(card);
   }
   cutStocks.forEach((stock,index)=>{
     const card=document.createElement('article');card.className='cutting-plan-card';
@@ -565,7 +568,7 @@ function setSection(section){
   $('#surface-select').hidden=section===3;
   $('.tile-type-switch').hidden=section!==3;
   document.querySelectorAll('button[data-section]').forEach(button=>{const active=Number(button.dataset.section)===section;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-  document.title=`O.家庭装修 V.1.12 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
+  document.title=`O.家庭装修 V.1.13 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
   $('#layout').hidden=section===2;document.querySelector('nav a[href="#layout"]').hidden=section===2;$('#original-cutting').hidden=section===2;
   if(section===3)selectFloor2TileType('1200');else if(section===1)selectSurface('floor');
   $('#layout-title').textContent=section===3?`二楼瓷砖铺贴平面图 · ${floor2TileLabel(state.floor2TileType)}`:'铺贴排版平面图';$('#layout .section-heading .eyebrow').textContent=section===3?'03 / 独立排版图':'02 / 独立排版图';
@@ -577,7 +580,7 @@ function setSection(section){
   $('#measurement-title').textContent=section===1?'硬装尺寸':section===2?'橱柜吊柜尺寸':'二楼尺寸';
   $('#measurements .section-description').textContent=section===3&&!data.floor2Dimensions?.length?'二楼集合中没有单独的尺寸标尺。':`以下为源工程中的${sectionLabel}标尺；点击一行在模型中高亮。顶视只显示 X、Y 方向且不小于 100 mm 的尺寸。`;
   $('#model-canvas').setAttribute('aria-label',section===1?'一楼硬装三维视图':section===2?'橱柜吊柜区与一楼硬装三维视图':'二楼模型三维视图');
-  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.12`;
+  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.13`;
   const url=new URL(location);if(section===1)url.searchParams.delete('section');else url.searchParams.set('section',section);history.replaceState(null,'',url);
   applyPresentation();renderModelLabels();renderRulerTable();frameCamera();updateThumbnail();
 }

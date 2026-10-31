@@ -1,4 +1,4 @@
-# O.家庭装修 · V.1.12
+# O.家庭装修 · V.1.13
 
 2026-10-31 发布快照，适用于 GitHub Pages，无需构建或安装依赖。
 
@@ -21,7 +21,7 @@
 1. 将本目录内的文件放入 kitchen-three 仓库根目录，保留 public、.github 等目录结构。
 2. 仓库 Settings → Pages → Source 选择 GitHub Actions。
 3. 提交到 main；随附的 .github/workflows/pages.yml 会发布网站。
-4. 访问 https://ohhhh233.github.io/kitchen-three/?v=1.12 。
+4. 访问 https://ohhhh233.github.io/kitchen-three/?v=1.13 。
 
 本包尚未提交或发布。可从 Actions 手动运行 Deploy GitHub Pages。
 
