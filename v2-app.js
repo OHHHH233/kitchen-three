@@ -1,20 +1,20 @@
-import {createSocketOutline} from './socket-outline.js?v=1.10';
-import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.10';
+import {createSocketOutline} from './socket-outline.js?v=1.11';
+import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.11';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.10';
-import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.10';
-import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.10';
-import {dedupeTopViewDimensions} from './scene-math.js?v=1.10';
-import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.10';
-import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.10';
-import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.10';
-import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.10';
-import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.10';
+import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.11';
+import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.11';
+import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.11';
+import {dedupeTopViewDimensions} from './scene-math.js?v=1.11';
+import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.11';
+import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.11';
+import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.11';
+import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.11';
+import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.11';
 
 const $=s=>document.querySelector(s), ns='http://www.w3.org/2000/svg';
-const state={section:1,cabinetVisible:true,wallCabinetVisible:true,cabinetDimensions:true,wallCabinetDimensions:true,cabinetDoorsVisible:false,wallCabinetDoorsVisible:false,cabinetTransparency:70,floor2HardVisible:true,floor2SoftVisible:false,floor2Transparency:0,floor2TileType:'800',view:'3d',perspectivePreset:null,direction:'front',edges:true,socketHighlights:{1:true,3:true},dimensions:true,tileFocus:true,ceilingVisible:false,contextTransparency:0,baseTransparency:0,tileTransparency:0,selectedRuler:null,selectedTile:null,surface:null};
+const state={section:1,cabinetVisible:true,wallCabinetVisible:true,cabinetDimensions:true,wallCabinetDimensions:true,cabinetDoorsVisible:false,wallCabinetDoorsVisible:false,cabinetTransparency:70,floor2HardVisible:true,floor2SoftVisible:false,floor2Transparency:0,floor2TileType:'1200',view:'3d',perspectivePreset:null,direction:'front',edges:true,socketHighlights:{1:true,3:true},dimensions:true,tileFocus:true,ceilingVisible:false,contextTransparency:0,baseTransparency:0,tileTransparency:0,selectedRuler:null,selectedTile:null,surface:null};
 let data,section1Dimensions,section1Surfaces,renderer,controls,camera,model,modelBounds,cameraPresets={},offset,previewRenderer,previewCamera;
 const scene=new THREE.Scene(),root=new THREE.Group(),tileRoot=new THREE.Group();
 scene.background=new THREE.Color(0xf5f7fa);scene.add(root,tileRoot);
@@ -317,7 +317,7 @@ function renderModelLabels(){
   const cameraDimensions=sourceDimensions;
   const dimensions=state.view==='top'?dedupeTopViewDimensions(cameraDimensions):cameraDimensions.filter(d=>dimensionVisible(d,state.view,state.direction));
   for(const d of dimensions){
-    const label=document.createElement('span');label.className='model-label'+(d.value<.1?' short-dimension':'')+(state.selectedRuler===d.id?' selected':'');label.textContent=mm(d.value*1000)+' mm';label.setAttribute('aria-label',d.id+' '+label.textContent);label.title=d.id;host.append(label);
+    const fixed=Boolean(d.fixed)||d.id.includes('固定尺寸');const label=document.createElement('span');label.className='model-label'+(d.value<.1?' short-dimension':'')+(fixed?' fixed-dimension':'')+(state.selectedRuler===d.id?' selected':'');label.textContent=mm(d.value*1000)+' mm';label.setAttribute('aria-label',d.id+' '+label.textContent);label.title=d.id;host.append(label);
     labels.push({d,button:label,a:toThree(d.endpoints[0]),b:toThree(d.endpoints[1])});
   }if(camera&&modelBounds)placeModelLabels();layoutDirty=true;
 }
@@ -388,11 +388,11 @@ function placeModelLabels(){
 function layoutModelLabels(){
   layoutDirty=false;if(!camera||!lineSvg)return;camera.updateMatrixWorld();const host=$('#model-canvas'),width=host.clientWidth,height=host.clientHeight;if(!width||!height)return;lineSvg.setAttribute('viewBox',`0 0 ${width} ${height}`);lineSvg.replaceChildren();
   const project=p=>{const v=p.clone().project(camera);return{x:(v.x+1)*width/2,y:(1-v.y)*height/2,z:v.z};};
-  const marker=element('marker',{id:'v2-arrow',markerWidth:5,markerHeight:5,refX:4.5,refY:2.5,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'});marker.append(element('path',{d:'M0 .3L4.6 2.5L0 4.7Z',fill:'#536171'}));const shortMarker=element('marker',{id:'v2-arrow-short',markerWidth:5,markerHeight:5,refX:4.5,refY:2.5,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'});shortMarker.append(element('path',{d:'M0 .3L4.6 2.5L0 4.7Z',fill:'#b6ef79'}));const zMarker=element('marker',{id:'v2-arrow-z',markerWidth:5,markerHeight:5,refX:4.5,refY:2.5,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'});zMarker.append(element('path',{d:'M0 .3L4.6 2.5L0 4.7Z',fill:'#55b9e8'}));const defs=element('defs');defs.append(marker,shortMarker,zMarker);lineSvg.append(defs);
+  const marker=element('marker',{id:'v2-arrow',markerWidth:5,markerHeight:5,refX:4.5,refY:2.5,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'});marker.append(element('path',{d:'M0 .3L4.6 2.5L0 4.7Z',fill:'#536171'}));const shortMarker=element('marker',{id:'v2-arrow-short',markerWidth:5,markerHeight:5,refX:4.5,refY:2.5,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'});shortMarker.append(element('path',{d:'M0 .3L4.6 2.5L0 4.7Z',fill:'#b6ef79'}));const zMarker=element('marker',{id:'v2-arrow-z',markerWidth:5,markerHeight:5,refX:4.5,refY:2.5,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'});zMarker.append(element('path',{d:'M0 .3L4.6 2.5L0 4.7Z',fill:'#55b9e8'}));const fixedMarker=element('marker',{id:'v2-arrow-fixed',markerWidth:5,markerHeight:5,refX:4.5,refY:2.5,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'});fixedMarker.append(element('path',{d:'M0 .3L4.6 2.5L0 4.7Z',fill:'#b66a70'}));const defs=element('defs');defs.append(marker,shortMarker,zMarker,fixedMarker);lineSvg.append(defs);
   for(const entry of labels){const {a,b,d,button}=entry,pa=project(a),pb=project(b),mid=a.clone().add(b).multiplyScalar(.5);const span=Math.hypot(pa.x-pb.x,pa.y-pb.y);button.hidden=Boolean(entry.mergedInto)||pa.z< -1||pa.z>1||pb.z< -1||pb.z>1||span<4;if(button.hidden)continue;
     button.dataset.calloutSide=String(entry.calloutSide||0);button.dataset.dimensionValue=String(d.value);
     if(entry.calloutSide)button.dataset.calloutDistanceMm='50';else delete button.dataset.calloutDistanceMm;
-    const arrow=d.axis==='Z'?'url(#v2-arrow-z)':d.value<.1?'url(#v2-arrow-short)':'url(#v2-arrow)';const line=element('line',{x1:pa.x,y1:pa.y,x2:pb.x,y2:pb.y,'data-dimension-id':d.id,class:'dimension-line'+(d.axis==='Z'?' axis-z':'')+(d.value<.1?' short-callout':' inline')+(state.selectedRuler===d.id?' selected':''),'marker-start':arrow,'marker-end':arrow});lineSvg.append(line);
+    const fixed=Boolean(d.fixed)||d.id.includes('固定尺寸');const arrow=fixed?'url(#v2-arrow-fixed)':d.axis==='Z'?'url(#v2-arrow-z)':d.value<.1?'url(#v2-arrow-short)':'url(#v2-arrow)';const line=element('line',{x1:pa.x,y1:pa.y,x2:pb.x,y2:pb.y,'data-dimension-id':d.id,class:'dimension-line'+(d.axis==='Z'?' axis-z':'')+(fixed?' fixed-dimension':'')+(d.value<.1?' short-callout':' inline')+(state.selectedRuler===d.id?' selected':''),'marker-start':arrow,'marker-end':arrow});lineSvg.append(line);
     const p=project(entry.anchor||mid),scale=1;
     const angle=entry.inlineRotation?` rotate(${entry.inlineRotation}deg)`:'';
     button.style.transform=`translate(${p.x}px,${p.y}px) translate(-50%,-50%)${angle} scale(${scale})`;button.dataset.anchor=(entry.anchor||mid).toArray().join(',');
@@ -400,7 +400,7 @@ function layoutModelLabels(){
       const normal=entry.leaderNormal||{x:0,y:1};
       const edgeDistance=Math.min((button.offsetWidth*scale/2+3)/Math.max(.001,Math.abs(normal.x)),(button.offsetHeight*scale/2+3)/Math.max(.001,Math.abs(normal.y)));
       lineSvg.append(element('line',{x1:(pa.x+pb.x)/2,y1:(pa.y+pb.y)/2,
-        x2:p.x-normal.x*edgeDistance,y2:p.y-normal.y*edgeDistance,'data-dimension-id':d.id,'data-gap-mm':'50',class:'dimension-leader'+(d.axis==='Z'?' axis-z':'')}));
+        x2:p.x-normal.x*edgeDistance,y2:p.y-normal.y*edgeDistance,'data-dimension-id':d.id,'data-gap-mm':'50',class:'dimension-leader'+(d.axis==='Z'?' axis-z':'')+(fixed?' fixed-dimension':'')}));
     }
   }
 }
@@ -516,6 +516,10 @@ function renderCuttingPlan(){
   page.append(legend);
 }
 function selectSurface(id){state.surface=id;state.selectedTile=currentSurface().tiles[0].id;$('#surface-select').value=id;$('#tile-search').value='';renderDrawing();renderCuttingPlan();}
+function floor2TileLabel(kind){
+  const options=data.floor2Surfaces?.filter(surface=>surface.tileGroup===kind)||[];
+  return options[0]?.nominalMm?.join('×')||kind;
+}
 function selectFloor2TileType(kind){
   const options=data.floor2Surfaces.filter(surface=>surface.tileGroup===kind).sort((a,b)=>Number(b.kind==='floor')-Number(a.kind==='floor'));
   if(!options.length)return;
@@ -526,7 +530,7 @@ function selectFloor2TileType(kind){
   picker.replaceChildren(...options.map(surface=>{const option=document.createElement('option');option.value=surface.id;option.textContent=surface.name;return option;}));
   const count=options.reduce((sum,surface)=>sum+surface.tiles.length,0),tag=document.createElement('span');tag.textContent=`${options[0].nominalMm.join(' × ')} · ${count} 块面`;
   $('#layout-counts').replaceChildren(tag);
-  $('#layout-title').textContent=kind==='800'?'二楼瓷砖铺贴平面图 · 800×800':'二楼瓷砖铺贴平面图 · 1500×750';
+  $('#layout-title').textContent=`二楼瓷砖铺贴平面图 · ${floor2TileLabel(kind)}`;
   selectSurface(options[0].id);if(model)applyPresentation();
 }
 function selectTile(id){state.selectedTile=id;$('#tile-drawing').querySelectorAll('[data-tile]').forEach(e=>e.classList.toggle('selected',e.dataset.tile===id));$('#tile-schedule').querySelectorAll('tr').forEach(r=>r.classList.toggle('selected',r.dataset.tile===id));updateTileDetail();}
@@ -541,7 +545,7 @@ function renderTileTable(){
     const values=[t.id,`${mm(t.widthMm)} × ${mm(t.heightMm)}`,t.rectangle?'矩形':'异形包络',areaM2(t.areaM2),t.edgeLengthsMm.map(mm).join(' / '),t.oversize?'待核对':'—'];for(const value of values){const td=document.createElement('td');td.textContent=value;if(value==='待核对')td.className='review-text';tr.append(td);}tr.addEventListener('click',()=>selectTile(t.id));tr.addEventListener('keydown',e=>{if(e.key==='Enter')selectTile(t.id);});return tr;}));
 }
 function renderRulerTable(){
-  $('#ruler-schedule').replaceChildren(...data.dimensions.map(d=>{const tr=document.createElement('tr');tr.dataset.ruler=d.id;tr.tabIndex=0;tr.classList.toggle('selected',state.selectedRuler===d.id);const mid=d.endpoints[0].map((v,i)=>(v+d.endpoints[1][i])*500);for(const v of[d.id,d.axis+' 轴',mm(d.value*1000),mid.map(mm).join(' / ')]){const td=document.createElement('td');td.textContent=v;tr.append(td);}tr.addEventListener('click',()=>selectRuler(d.id,true));tr.addEventListener('keydown',e=>{if(e.key==='Enter')selectRuler(d.id,true);});return tr;}));
+  $('#ruler-schedule').replaceChildren(...data.dimensions.map(d=>{const tr=document.createElement('tr');tr.dataset.ruler=d.id;tr.tabIndex=0;tr.classList.toggle('selected',state.selectedRuler===d.id);tr.classList.toggle('fixed-dimension',Boolean(d.fixed)||d.id.includes('固定尺寸'));const mid=d.endpoints[0].map((v,i)=>(v+d.endpoints[1][i])*500);for(const v of[d.id,d.axis+' 轴',mm(d.value*1000),mid.map(mm).join(' / ')]){const td=document.createElement('td');td.textContent=v;tr.append(td);}tr.addEventListener('click',()=>selectRuler(d.id,true));tr.addEventListener('keydown',e=>{if(e.key==='Enter')selectRuler(d.id,true);});return tr;}));
 }
 function selectRuler(id,scroll){state.selectedRuler=state.selectedRuler===id?null:id;const d=data.dimensions.find(d=>d.id===id);if(state.selectedRuler){if(d.zone==='cabinet'){state.cabinetVisible=true;state.cabinetDimensions=true;}else if(d.zone==='wall-cabinet'){state.wallCabinetVisible=true;state.wallCabinetDimensions=true;}if(!dimensionVisible(d,state.view,state.direction))state.view='3d';}$('#dimension-toggle').checked=true;state.dimensions=true;applyPresentation();renderModelLabels();renderRulerTable();frameCamera();if(scroll)$('#space').scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'start'});}
 function setSection(section){
@@ -553,7 +557,7 @@ function setSection(section){
     state.wallCabinetVisible=false;state.wallCabinetDimensions=false;state.wallCabinetDoorsVisible=false;
     state.cabinetTransparency=70;state.baseTransparency=100;
   }else if(section===3){
-    state.cabinetTransparency=70;state.baseTransparency=0;state.floor2HardVisible=true;state.floor2SoftVisible=false;state.floor2Transparency=0;state.floor2TileType='800';
+    state.cabinetTransparency=70;state.baseTransparency=0;state.floor2HardVisible=true;state.floor2SoftVisible=false;state.floor2Transparency=0;state.floor2TileType='1200';
   }else{state.cabinetTransparency=70;state.baseTransparency=75;}
   const sectionName=section===1?'板块一':section===2?'橱柜吊柜区':'二楼';
   const sectionLabel=section===1?'硬装与铺贴':section===2?'橱柜区与吊柜区':'硬装与软装';
@@ -561,10 +565,10 @@ function setSection(section){
   $('#surface-select').hidden=section===3;
   $('.tile-type-switch').hidden=section!==3;
   document.querySelectorAll('button[data-section]').forEach(button=>{const active=Number(button.dataset.section)===section;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-  document.title=`O.家庭装修 V.1.10 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
+  document.title=`O.家庭装修 V.1.11 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
   $('#layout').hidden=section===2;document.querySelector('nav a[href="#layout"]').hidden=section===2;$('#original-cutting').hidden=section===2;
-  if(section===3)selectFloor2TileType('800');else if(section===1)selectSurface('floor');
-  $('#layout-title').textContent=section===3?`二楼瓷砖铺贴平面图 · ${state.floor2TileType==='800'?'800×800':'1500×750'}`:'铺贴排版平面图';$('#layout .section-heading .eyebrow').textContent=section===3?'03 / 独立排版图':'02 / 独立排版图';
+  if(section===3)selectFloor2TileType('1200');else if(section===1)selectSurface('floor');
+  $('#layout-title').textContent=section===3?`二楼瓷砖铺贴平面图 · ${floor2TileLabel(state.floor2TileType)}`:'铺贴排版平面图';$('#layout .section-heading .eyebrow').textContent=section===3?'03 / 独立排版图':'02 / 独立排版图';
   $('.model-options').classList.toggle('section2',section===2);$('.model-options').classList.toggle('section3',section===3);
   $('.settings-primary').hidden=section>1;
   $('#context-transparency-control>span').textContent=section===1?'其余模型透明度':section===2?'一楼硬装透明度':'二楼模型透明度';
@@ -573,7 +577,7 @@ function setSection(section){
   $('#measurement-title').textContent=section===1?'硬装尺寸':section===2?'橱柜吊柜尺寸':'二楼尺寸';
   $('#measurements .section-description').textContent=section===3&&!data.floor2Dimensions?.length?'二楼集合中没有单独的尺寸标尺。':`以下为源工程中的${sectionLabel}标尺；点击一行在模型中高亮。顶视只显示 X、Y 方向且不小于 100 mm 的尺寸。`;
   $('#model-canvas').setAttribute('aria-label',section===1?'一楼硬装三维视图':section===2?'橱柜吊柜区与一楼硬装三维视图':'二楼模型三维视图');
-  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.10`;
+  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.11`;
   const url=new URL(location);if(section===1)url.searchParams.delete('section');else url.searchParams.set('section',section);history.replaceState(null,'',url);
   applyPresentation();renderModelLabels();renderRulerTable();frameCamera();updateThumbnail();
 }

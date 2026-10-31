@@ -1,15 +1,14 @@
 {
   "name": "O.家庭装修",
-  "version": "V.1.10",
-  "date": "2026-10-31",
-  "sourceModelSha256": "ee71d64f539b4e9de4ad6a1a219f1b01a436b35af215ac7f3e177e448ca10f00",
-  "modelSha256": "33e774c560abb3e702c00fb0517824f691fb06e5f07eb774e48e4e71017630c4",
-  "modelDataSha256": "15cbea250122238767f6e2dcdbd5cb8178979ae31f331f67bfd657af86e6ae5e",
-  "annotationsSha256": "ec4b79d5a782f229ae1dea8c092a798eef7ccd19dee1fb22c6abff136455c037",
+  "version": "V.1.11",
+  "date": "2026-11-01",
+  "sourceModelSha256": "e7f73484d7627969231083f09c3a2fad95f578207d7b934934b1ee998d18ffa1",
+  "modelSha256": "23695b3d0acfdfce1e7e57f4d9b756d4f6c1ac10eb0b4da96c6812736161e8a3",
+  "modelDataSha256": "f5ed33d54879bda1bb263df40b5093352d12b934bbe05c68775f4a04a702315c",
+  "annotationsSha256": "a6b38aae42a31719eea56bcd00465cb06f06348bf2cb9465f752934c0d9ef020",
   "annotationCounts": {
     "section1": 2,
-    "section2": 0,
-    "section3": 0
+    "section2": 0
   },
   "entryPoints": [
     "index.html",
