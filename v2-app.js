@@ -1,16 +1,17 @@
-import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.05';
+import {createSocketOutline} from './socket-outline.js?v=1.06';
+import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.06';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.05';
-import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection,keepNearAxisDimensions} from './v2-math.js?v=1.05';
-import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.05';
-import {dedupeTopViewDimensions} from './scene-math.js?v=1.05';
-import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.05';
-import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.05';
-import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.05';
-import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.05';
-import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.05';
+import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.06';
+import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection,keepNearAxisDimensions} from './v2-math.js?v=1.06';
+import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.06';
+import {dedupeTopViewDimensions} from './scene-math.js?v=1.06';
+import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.06';
+import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.06';
+import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.06';
+import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.06';
+import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.06';
 
 const $=s=>document.querySelector(s), ns='http://www.w3.org/2000/svg';
 const state={section:1,cabinetVisible:true,wallCabinetVisible:true,cabinetDimensions:true,wallCabinetDimensions:true,cabinetDoorsVisible:false,wallCabinetDoorsVisible:false,cabinetTransparency:70,floor2HardVisible:true,floor2SoftVisible:false,floor2Transparency:0,floor2TileType:'800',view:'3d',perspectivePreset:null,direction:'front',edges:true,socketHighlights:{1:true,3:true},dimensions:true,tileFocus:true,ceilingVisible:false,contextTransparency:0,baseTransparency:0,tileTransparency:0,selectedRuler:null,selectedTile:null,surface:null};
@@ -159,6 +160,7 @@ async function setupModel(){
     if(floor2TileNames.has(entry.name))continue;
     const geometry=new THREE.EdgesGeometry(entry.mesh.geometry,15);
     const edge=new THREE.LineSegments(geometry,outlineMaterial(0x75808e));edge.renderOrder=200;edge.userData.socket=Boolean(entry.mesh.userData.socket);entry.mesh.add(edge);edgeEntries.push(edge);
+    if(entry.mesh.userData.socket){const highlight=createSocketOutline(geometry);entry.mesh.add(highlight);edge.highlightOutline=highlight;}
   }
   renderer.domElement.addEventListener('click',placeAnnotationAt);
   addTileGeometry();
@@ -228,6 +230,7 @@ function applyPresentation(){
     const socketStyle=socketEdgeStyle({socket:edge.userData.socket,ownerSection:owner?.userData.section,section:state.section,highlight:state.socketHighlights[state.section],edges:state.edges,edgeOpacity:style.edgeOpacity});
     edge.visible=floor2Source?state.edges&&secondFloor&&tileOverlayView&&state.floor2HardVisible&&edge.userData.tileGroup===state.floor2TileType:Boolean(owner?.visible)&&socketStyle.visible;
     edge.userData.socketHighlighted=socketStyle.highlighted;
+    if(edge.highlightOutline)edge.highlightOutline.visible=socketStyle.highlighted&&Boolean(owner?.visible);
     if(!floor2Source)edge.material.color.setHex(socketStyle.color);
     edge.material.transparent=socketStyle.opacity<1;edge.material.opacity=socketStyle.opacity;
     edge.material.toneMapped=!socketStyle.highlighted;
@@ -407,7 +410,12 @@ function layoutModelLabels(){
 }
 function updateThumbnail(){
   if(!model)return;const host=$('#model-thumbnail');if(!previewRenderer){previewRenderer=new THREE.WebGLRenderer({alpha:true,antialias:true});previewRenderer.setPixelRatio(Math.min(devicePixelRatio,1.5));host.append(previewRenderer.domElement);}
-  const preview=new THREE.Scene(),copy=model.clone(true);copy.traverse(o=>{if(o.isMesh)o.material=new THREE.MeshBasicMaterial({color:0xbacde4,side:THREE.DoubleSide,...surfaceDepth('hard',Math.max(0,data.objects.indexOf(sourceName(o))),data.objects.length)});else if(o.isLine){o.material=o.material.clone();}});preview.add(copy);
+  const preview=new THREE.Scene();
+  // Fat socket highlight lines use instanced line geometry, which is not part
+  // of the thumbnail and cannot be cloned by Three.js' ordinary Object3D clone.
+  const socketHighlights=[];model.traverse(o=>{if(o.userData.socketHighlight){socketHighlights.push([o,o.parent]);o.parent?.remove(o);}});
+  const copy=model.clone(true);for(const [object,parent] of socketHighlights)parent?.add(object);
+  copy.traverse(o=>{if(o.userData.socketHighlight)o.visible=false;if(o.isMesh)o.material=new THREE.MeshBasicMaterial({color:0xbacde4,side:THREE.DoubleSide,...surfaceDepth('hard',Math.max(0,data.objects.indexOf(sourceName(o))),data.objects.length)});else if(o.isLine){o.material=o.material.clone();}});preview.add(copy);
   previewCamera=previewCamera||new THREE.OrthographicCamera();const size=modelBounds.getSize(new THREE.Vector3()),center=modelBounds.getCenter(new THREE.Vector3()),half=Math.max(size.x,size.z)/2*1.08;
   Object.assign(previewCamera,{left:-half,right:half,top:half,bottom:-half,near:.01,far:100});previewCamera.up.set(0,0,-1);previewCamera.position.copy(center).add(new THREE.Vector3(0,20,0));previewCamera.lookAt(center);fitDepthRange(previewCamera,modelBounds);previewCamera.updateProjectionMatrix();const width=mobile.matches?92:140;previewRenderer.setSize(width,width,false);previewRenderer.render(preview,previewCamera);copy.traverse(o=>{if(o.isMesh||o.isLine)o.material.dispose();});
 }
@@ -557,7 +565,7 @@ function setSection(section){
   $('#surface-select').hidden=section===3;
   $('.tile-type-switch').hidden=section!==3;
   document.querySelectorAll('button[data-section]').forEach(button=>{const active=Number(button.dataset.section)===section;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-  document.title=`O.家庭装修 V.1.05 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
+  document.title=`O.家庭装修 V.1.06 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
   $('#layout').hidden=section===2;document.querySelector('nav a[href="#layout"]').hidden=section===2;$('#original-cutting').hidden=section===2;
   if(section===3)selectFloor2TileType('800');else if(section===1)selectSurface('floor');
   $('#layout-title').textContent=section===3?`二楼瓷砖铺贴平面图 · ${state.floor2TileType==='800'?'800×800':'1500×750'}`:'铺贴排版平面图';$('#layout .section-heading .eyebrow').textContent=section===3?'03 / 独立排版图':'02 / 独立排版图';
@@ -569,7 +577,7 @@ function setSection(section){
   $('#measurement-title').textContent=section===1?'硬装尺寸':section===2?'橱柜吊柜尺寸':'二楼尺寸';
   $('#measurements .section-description').textContent=section===3&&!data.floor2Dimensions?.length?'二楼集合中没有单独的尺寸标尺。':`以下为源工程中的${sectionLabel}标尺；点击一行在模型中高亮。顶视只显示 X、Y 方向且不小于 100 mm 的尺寸。`;
   $('#model-canvas').setAttribute('aria-label',section===1?'一楼硬装三维视图':section===2?'橱柜吊柜区与一楼硬装三维视图':'二楼模型三维视图');
-  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.05`;
+  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.06`;
   const url=new URL(location);if(section===1)url.searchParams.delete('section');else url.searchParams.set('section',section);history.replaceState(null,'',url);
   applyPresentation();renderModelLabels();renderRulerTable();frameCamera();updateThumbnail();
 }
