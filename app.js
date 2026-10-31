@@ -1,10 +1,10 @@
 import * as THREE from 'three';
-import { addPanelEdges, togglePanelEdges } from './panel-edges.js?v=1.04';
-import { bindTapToZoom, tapFocusFrame } from './tap-zoom.js?v=1.04';
+import { addPanelEdges, togglePanelEdges } from './panel-edges.js?v=1.05';
+import { bindTapToZoom, tapFocusFrame } from './tap-zoom.js?v=1.05';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { blenderToThree, validateDimensions, centeredOffset, cameraFrame, dimensionArrowHeads, inlineDimensionLayout, dimensionArrowTriangles, inlineDimensionTextScale, fixedDimensionGeometry, dedupeTopViewDimensions, topViewLabelAnchor } from './scene-math.js?v=1.04';
-import { cabinetElevations, cabinetRegionsForBounds, cabinetDimensionRegion, cabinetWallRegionForMaterial } from './cabinet-regions.js?v=1.04';
+import { blenderToThree, validateDimensions, centeredOffset, cameraFrame, dimensionArrowHeads, inlineDimensionLayout, dimensionArrowTriangles, inlineDimensionTextScale, fixedDimensionGeometry, dedupeTopViewDimensions, topViewLabelAnchor } from './scene-math.js?v=1.05';
+import { cabinetElevations, cabinetRegionsForBounds, cabinetDimensionRegion, cabinetWallRegionForMaterial } from './cabinet-regions.js?v=1.05';
 
 const steps = [
   { id: 'kitchen', name: '厨房整体', sub: '空间与墙面', file: 'kitchen-overall.glb' },

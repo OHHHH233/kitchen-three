@@ -1,6 +1,6 @@
-# O.家庭装修 · V.1.04
+# O.家庭装修 · V.1.05
 
-2026-10-30 发布快照，适用于 GitHub Pages，无需构建或安装依赖。
+2026-10-31 发布快照，适用于 GitHub Pages，无需构建或安装依赖。
 
 ## 内容
 
@@ -10,6 +10,7 @@
 - 已包含最新模型、修复后的真实砖缝、浅色斜纹及最新标注 JSON。
 - 瓷砖透明度为 0%，已移除瓷砖透明度滑杆；控制区布局统一。
 - 操作区、模型和排版图不再触发文字拖选；标注输入框可正常编辑、选择和复制。
+- 板块一与板块三提供独立的插座高亮开关，默认开启亮蓝色边缘；黑色插座模型保留。
 - 保留旧版入口 v1.html。Three.js 和全部模型、贴图随包提供。
 
 ## 发布到 GitHub Pages
@@ -17,7 +18,7 @@
 1. 将本目录内的文件放入 kitchen-three 仓库根目录，保留 public、.github 等目录结构。
 2. 仓库 Settings → Pages → Source 选择 GitHub Actions。
 3. 提交到 main；随附的 .github/workflows/pages.yml 会发布网站。
-4. 访问 https://ohhhh233.github.io/kitchen-three/?v=1.04 。
+4. 访问 https://ohhhh233.github.io/kitchen-three/?v=1.05 。
 
 本包尚未提交或发布。可从 Actions 手动运行 Deploy GitHub Pages。
 

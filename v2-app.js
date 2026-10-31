@@ -1,18 +1,19 @@
+import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.05';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.04';
-import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection,keepNearAxisDimensions} from './v2-math.js?v=1.04';
-import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.04';
-import {dedupeTopViewDimensions} from './scene-math.js?v=1.04';
-import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.04';
-import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.04';
-import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.04';
-import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.04';
-import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.04';
+import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.05';
+import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection,keepNearAxisDimensions} from './v2-math.js?v=1.05';
+import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.05';
+import {dedupeTopViewDimensions} from './scene-math.js?v=1.05';
+import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.05';
+import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.05';
+import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.05';
+import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.05';
+import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.05';
 
 const $=s=>document.querySelector(s), ns='http://www.w3.org/2000/svg';
-const state={section:1,cabinetVisible:true,wallCabinetVisible:true,cabinetDimensions:true,wallCabinetDimensions:true,cabinetDoorsVisible:false,wallCabinetDoorsVisible:false,cabinetTransparency:70,floor2HardVisible:true,floor2SoftVisible:false,floor2Transparency:0,floor2TileType:'800',view:'3d',perspectivePreset:null,direction:'front',edges:true,dimensions:true,tileFocus:true,ceilingVisible:false,contextTransparency:0,baseTransparency:0,tileTransparency:0,selectedRuler:null,selectedTile:null,surface:null};
+const state={section:1,cabinetVisible:true,wallCabinetVisible:true,cabinetDimensions:true,wallCabinetDimensions:true,cabinetDoorsVisible:false,wallCabinetDoorsVisible:false,cabinetTransparency:70,floor2HardVisible:true,floor2SoftVisible:false,floor2Transparency:0,floor2TileType:'800',view:'3d',perspectivePreset:null,direction:'front',edges:true,socketHighlights:{1:true,3:true},dimensions:true,tileFocus:true,ceilingVisible:false,contextTransparency:0,baseTransparency:0,tileTransparency:0,selectedRuler:null,selectedTile:null,surface:null};
 let data,section1Dimensions,section1Surfaces,renderer,controls,camera,model,modelBounds,cameraPresets={},offset,previewRenderer,previewCamera;
 const scene=new THREE.Scene(),root=new THREE.Group(),tileRoot=new THREE.Group();
 scene.background=new THREE.Color(0xf5f7fa);scene.add(root,tileRoot);
@@ -149,7 +150,7 @@ async function setupModel(){
     o.material=(Array.isArray(o.material)?o.material:[o.material]).map(original=>o.userData.section===2?cabinetMaterial(original,rank,data.objects.length):new THREE.MeshStandardMaterial({
       color:stair?0xc4cfdb:0xe5e9ed,roughness:.85,side:THREE.DoubleSide,
       ...surfaceDepth('hard',rank,data.objects.length),forceSinglePass:true}));
-    o.renderOrder=rank;
+    o.userData.socket=isSocketObject(name)||isSocketObject(o.name);o.renderOrder=rank;
     if(o.material.length===1)o.material=o.material[0];
     meshEntries.push({mesh:o,name,materials:Array.isArray(o.material)?o.material:[o.material]});
   });
@@ -157,7 +158,7 @@ async function setupModel(){
   for(const entry of meshEntries){
     if(floor2TileNames.has(entry.name))continue;
     const geometry=new THREE.EdgesGeometry(entry.mesh.geometry,15);
-    const edge=new THREE.LineSegments(geometry,outlineMaterial(0x75808e));edge.renderOrder=200;entry.mesh.add(edge);edgeEntries.push(edge);
+    const edge=new THREE.LineSegments(geometry,outlineMaterial(0x75808e));edge.renderOrder=200;edge.userData.socket=Boolean(entry.mesh.userData.socket);entry.mesh.add(edge);edgeEntries.push(edge);
   }
   renderer.domElement.addEventListener('click',placeAnnotationAt);
   addTileGeometry();
@@ -215,12 +216,23 @@ function applyPresentation(){
     const foreground=Boolean(zone)&&context;
     const cabinetOpacity=1-state.cabinetTransparency/100;
     const style=foreground?{color:0xc5d6e9,opacity:cabinetOpacity,transparent:cabinetOpacity<1,depthWrite:cabinetOpacity===1}:context?baseStyle:tilePresentation({view:state.view,focus:state.tileFocus,contextTransparency:state.contextTransparency,kind:'hard',door:entry.name.includes('门')});
-    const socketObject=entry.name.includes('插座')||entry.mesh.name.includes('插座');
+    const socketObject=entry.mesh.userData.socket;
     const materials=entry.materials;for(const m of materials){m.color.setHex(socketObject?0x101010:!focus&&entry.name.includes('楼梯')?0xc4cfdb:style.color);m.opacity=style.opacity;m.transparent=style.transparent;m.depthWrite=style.depthWrite;m.needsUpdate=true;}
   }
   model?.traverse(o=>{if(o.isLight&&o.userData.floor2Light)o.visible=secondFloor&&state.floor2HardVisible;});
   const contextStyle=baseStyle;
-  edgeEntries.forEach(edge=>{const floor2Source=edge.userData.floor2TileSource,owner=floor2Source?edge.userData.ownerMesh:edge.parent,foreground=(floor2Source?3:owner?.userData.section)===state.section&&state.section>1;const style=foreground?{edgeOpacity:1}:contextStyle;edge.visible=state.edges&&(floor2Source?secondFloor&&tileOverlayView&&state.floor2HardVisible&&edge.userData.tileGroup===state.floor2TileType:Boolean(owner?.visible));edge.material.transparent=style.edgeOpacity<1;edge.material.opacity=style.edgeOpacity;edge.renderOrder=floor2Source?220:foreground?210:400;edge.material.needsUpdate=true;});
+  edgeEntries.forEach(edge=>{
+    const floor2Source=edge.userData.floor2TileSource,owner=floor2Source?edge.userData.ownerMesh:edge.parent;
+    const foreground=(floor2Source?3:owner?.userData.section)===state.section&&state.section>1;
+    const style=foreground?{edgeOpacity:1}:contextStyle;
+    const socketStyle=socketEdgeStyle({socket:edge.userData.socket,ownerSection:owner?.userData.section,section:state.section,highlight:state.socketHighlights[state.section],edges:state.edges,edgeOpacity:style.edgeOpacity});
+    edge.visible=floor2Source?state.edges&&secondFloor&&tileOverlayView&&state.floor2HardVisible&&edge.userData.tileGroup===state.floor2TileType:Boolean(owner?.visible)&&socketStyle.visible;
+    edge.userData.socketHighlighted=socketStyle.highlighted;
+    if(!floor2Source)edge.material.color.setHex(socketStyle.color);
+    edge.material.transparent=socketStyle.opacity<1;edge.material.opacity=socketStyle.opacity;
+    edge.material.toneMapped=!socketStyle.highlighted;
+    edge.renderOrder=socketStyle.highlighted?410:floor2Source?220:foreground?210:400;edge.material.needsUpdate=true;
+  });
   for(const mesh of tileRoot.children){const floor2Tile=mesh.userData.floor2,style=floor2Tile?tilePresentation({view:state.view,focus,contextTransparency:state.floor2Transparency,tileTransparency:state.tileTransparency,kind:mesh.userData.kind,sourceObject:TILE_FOCUS_OBJECT}):tilePresentation({view:state.view,focus:state.tileFocus,contextTransparency:state.contextTransparency,tileTransparency:state.tileTransparency,kind:mesh.userData.kind,sourceObject:mesh.userData.sourceObject});
     const floor2TypeVisible=!floor2Tile||mesh.userData.tileGroup===state.floor2TileType;
     mesh.visible=floor2Tile?state.section===3&&state.floor2HardVisible&&floor2TypeVisible&&(state.view==='3d'||state.view==='top'):!context&&(mesh.userData.kind==='ceiling'?state.view==='3d'&&state.ceilingVisible:mesh.userData.kind==='floor'||(!top&&state.view==='3d'));
@@ -239,6 +251,7 @@ function applyPresentation(){
   $('#model-canvas').dataset.doorsVisible=String(state.cabinetDoorsVisible||state.wallCabinetDoorsVisible);
   $('#model-canvas').dataset.cabinetTransparency=String(state.cabinetTransparency);
   $('#edges-toggle').setAttribute('aria-pressed',state.edges);
+  $('#socket-highlight-control').hidden=state.section===2;$('#socket-highlight-toggle').checked=Boolean(state.socketHighlights[state.section]);
   $('#direction').hidden=state.view!=='elevation';$('#model-thumbnail').hidden=state.view!=='elevation';
   annotationLayoutDirty=true;
   document.querySelectorAll('[data-view]').forEach(button=>{const active=button.dataset.view===state.view&&!(button.dataset.view==='3d'&&state.perspectivePreset);button.classList.toggle('active',active);button.setAttribute('aria-pressed',active);});
@@ -544,7 +557,7 @@ function setSection(section){
   $('#surface-select').hidden=section===3;
   $('.tile-type-switch').hidden=section!==3;
   document.querySelectorAll('button[data-section]').forEach(button=>{const active=Number(button.dataset.section)===section;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-  document.title=`O.家庭装修 V.1.04 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
+  document.title=`O.家庭装修 V.1.05 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
   $('#layout').hidden=section===2;document.querySelector('nav a[href="#layout"]').hidden=section===2;$('#original-cutting').hidden=section===2;
   if(section===3)selectFloor2TileType('800');else if(section===1)selectSurface('floor');
   $('#layout-title').textContent=section===3?`二楼瓷砖铺贴平面图 · ${state.floor2TileType==='800'?'800×800':'1500×750'}`:'铺贴排版平面图';$('#layout .section-heading .eyebrow').textContent=section===3?'03 / 独立排版图':'02 / 独立排版图';
@@ -556,7 +569,7 @@ function setSection(section){
   $('#measurement-title').textContent=section===1?'硬装尺寸':section===2?'橱柜吊柜尺寸':'二楼尺寸';
   $('#measurements .section-description').textContent=section===3&&!data.floor2Dimensions?.length?'二楼集合中没有单独的尺寸标尺。':`以下为源工程中的${sectionLabel}标尺；点击一行在模型中高亮。顶视只显示 X、Y 方向且不小于 100 mm 的尺寸。`;
   $('#model-canvas').setAttribute('aria-label',section===1?'一楼硬装三维视图':section===2?'橱柜吊柜区与一楼硬装三维视图':'二楼模型三维视图');
-  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.04`;
+  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.05`;
   const url=new URL(location);if(section===1)url.searchParams.delete('section');else url.searchParams.set('section',section);history.replaceState(null,'',url);
   applyPresentation();renderModelLabels();renderRulerTable();frameCamera();updateThumbnail();
 }
@@ -565,6 +578,7 @@ function bindEvents(){
   document.querySelectorAll('button[data-section]').forEach(button=>button.addEventListener('click',()=>setSection(Number(button.dataset.section))));
   for(const [id,key] of [['cabinet-visible','cabinetVisible'],['cabinet-dimensions','cabinetDimensions'],['cabinet-doors','cabinetDoorsVisible'],['wall-cabinet-visible','wallCabinetVisible'],['wall-cabinet-dimensions','wallCabinetDimensions'],['wall-cabinet-doors','wallCabinetDoorsVisible']])$('#'+id).addEventListener('change',e=>{state[key]=e.target.checked;applyPresentation();if(id.endsWith('dimensions'))renderModelLabels();if(id.endsWith('visible'))frameCamera();});
   $('#cabinet-transparency').addEventListener('input',e=>{state.cabinetTransparency=Number(e.target.value);applyPresentation();});
+  $('#socket-highlight-toggle').addEventListener('change',e=>{state.socketHighlights[state.section]=e.target.checked;applyPresentation();});
   $('#ceiling-toggle').addEventListener('click',()=>{state.ceilingVisible=!state.ceilingVisible;applyPresentation();});
   $('#tile-focus-toggle').addEventListener('click',()=>{state.tileFocus=!state.tileFocus;applyPresentation();frameCamera();});
   $('#context-transparency').addEventListener('input',e=>{if(state.section===3)state.floor2Transparency=Number(e.target.value);else if(state.section===2)state.baseTransparency=Number(e.target.value);else state.contextTransparency=Number(e.target.value);applyPresentation();});
