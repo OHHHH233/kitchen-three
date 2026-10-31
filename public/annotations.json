@@ -287,6 +287,42 @@
         "section2": [],
         "section3": []
       }
+    },
+    "dde1d1fd9d4da1e0f1f8a84d8578e9435cb4e122ce684233ca41d9351841da94": {
+      "sections": {
+        "section1": [
+          {
+            "id": "13e51022-0626-46a5-be71-7f3c1affccb7",
+            "modelSha": "dde1d1fd9d4da1e0f1f8a84d8578e9435cb4e122ce684233ca41d9351841da94",
+            "objectName": "一楼Floor.001",
+            "position": [
+              -0.5469587477261795,
+              -0.7000000476837158,
+              -0.034517411142452215
+            ],
+            "text": "厨房",
+            "note": "",
+            "color": "#000000",
+            "fontSize": 12
+          },
+          {
+            "id": "b36f0dca-37e7-4f89-aae8-7032829738a8",
+            "modelSha": "dde1d1fd9d4da1e0f1f8a84d8578e9435cb4e122ce684233ca41d9351841da94",
+            "objectName": "一楼Floor.001",
+            "position": [
+              -1.398963153513015,
+              -0.7000000476837156,
+              1.2714390858886495
+            ],
+            "text": "卫生间",
+            "note": "",
+            "color": "#1a1a1a",
+            "fontSize": 12
+          }
+        ],
+        "section2": [],
+        "section3": []
+      }
     }
   },
   "revision": "d445607ceb7f160acba2890c255d8b26df7086d3431f2bcc945b8b0e72fa2154"

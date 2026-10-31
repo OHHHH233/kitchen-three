@@ -1,11 +1,11 @@
 {
   "name": "O.家庭装修",
-  "version": "V.1.06",
+  "version": "V.1.07",
   "date": "2026-10-31",
-  "sourceModelSha256": "652211a2c3f1bd6a7b1a899b7821e43dfaf2c4ac79282b52df5422a2c0870cf8",
-  "modelSha256": "5a85162457198ee3367b1d04c88003c55b91ce7c8a8720028dcd4ab0b4de122f",
-  "modelDataSha256": "00ecce2defe8e0c619c36f7f620d4a3927818344ea09fd5d552c24f5f2cb496f",
-  "annotationsSha256": "3307485b1df00dee1f59911583b2c94dfe46f6941591d7c6938a95825167ac72",
+  "sourceModelSha256": "dde1d1fd9d4da1e0f1f8a84d8578e9435cb4e122ce684233ca41d9351841da94",
+  "modelSha256": "4e6ba3958ceedae4fb43d9db14110d3e3bced1c0f1bec7daa88c67ea6d51ad75",
+  "modelDataSha256": "f4e5a954e2a25aab609a26aacb8366d7127464c24f8843b55482ce5cb16565db",
+  "annotationsSha256": "500b989ea58e478b387807a95ad5451382085a6573aff3cadfe090bed240b6ea",
   "annotationCounts": {
     "section1": 2,
     "section2": 0,
