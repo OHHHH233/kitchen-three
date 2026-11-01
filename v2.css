@@ -354,3 +354,15 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border:0;border-radiu
  .layout-toolbar .surface-label{width:100%;font-size:13px}.layout-toolbar .surface-label select{flex:1;min-width:0;width:auto;font-size:13px}
  .layout-toolbar>#surface-spec{width:100%;font-size:12px;line-height:1.6}.layout-toolbar .drawing-controls{width:100%;margin-left:0;justify-content:flex-end}.layout-toolbar .drawing-controls label{margin-right:auto}
 }
+/* 排版图控件：缩放按钮叠放在图纸右下角，导出按钮位于 02 标题行右侧。 */
+.layout-heading-actions{display:flex;align-items:center;gap:12px;min-width:0}
+.layout-heading-actions .text-button{white-space:nowrap}
+.drawing-zoom-controls{position:absolute;right:18px;bottom:18px;z-index:4;display:flex;gap:6px;padding:4px;border:1px solid rgba(213,205,199,.9);border-radius:10px;background:rgba(255,255,255,.88);box-shadow:0 4px 14px rgba(50,50,50,.08)}
+.drawing-zoom-controls button{width:36px;height:36px;padding:0;border:1px solid #d9d2cc;border-radius:8px;background:#fff;color:#323232;font-size:16px;line-height:1}
+.drawing-zoom-controls button:hover{background:#f4efec}
+@media(max-width:650px){
+ .layout-heading-actions{width:100%;justify-content:space-between;gap:8px}
+ .layout-heading-actions .text-button{font-size:12px;padding:9px 11px}
+ .drawing-zoom-controls{right:12px;bottom:42px;gap:4px;padding:3px;border-radius:9px}
+ .drawing-zoom-controls button{width:32px;height:32px;font-size:14px}
+}
