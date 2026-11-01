@@ -98220,8 +98220,8 @@
           "sourceFaceIndices": [
             51
           ],
-          "specialHandling": "按用户要求特殊处理；保留源模型尺寸，不纳入普通备料统计。",
           "surfaceId": "floor",
+          "specialHandling": "按用户要求特殊处理；保留源模型尺寸，不纳入普通备料统计。",
           "cuttingClass": "review"
         },
         {
@@ -102635,7 +102635,8 @@
       "name": "地面铺贴平面图",
       "areaM2": 26.63115,
       "flipX": true,
-      "flipY": true
+      "flipY": true,
+      "internalWiringDiagonalRatio": 0
     },
     {
       "key": "ceiling",
@@ -106999,7 +107000,8 @@
       "name": "厨房吊顶排版平面图",
       "areaM2": 5.2,
       "flipX": true,
-      "flipY": true
+      "flipY": true,
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-1.265:1",
@@ -107643,7 +107645,8 @@
       "name": "墙面 / 竖向面 01",
       "areaM2": 1.21917,
       "flipX": true,
-      "flipY": true
+      "flipY": true,
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-1.515:1",
@@ -107791,7 +107794,8 @@
       "name": "墙面 / 竖向面 02",
       "areaM2": 0.09,
       "flipX": true,
-      "flipY": true
+      "flipY": true,
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-1.965:-1",
@@ -108931,7 +108935,8 @@
       "name": "墙面 / 竖向面 03",
       "areaM2": 4.64753,
       "flipX": true,
-      "flipY": true
+      "flipY": true,
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:0.435:-1",
@@ -109327,7 +109332,8 @@
       "name": "墙面 / 竖向面 04",
       "areaM2": 0.38,
       "flipX": true,
-      "flipY": true
+      "flipY": true,
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:0.635:-1",
@@ -110095,7 +110101,8 @@
       "name": "墙面 / 竖向面 05",
       "areaM2": 2.66001,
       "flipX": true,
-      "flipY": true
+      "flipY": true,
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:0.635:1",
@@ -111235,7 +111242,8 @@
       "name": "墙面 / 竖向面 06",
       "areaM2": 2.96753,
       "flipX": true,
-      "flipY": true
+      "flipY": true,
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:-6.089:1",
@@ -112579,7 +112587,8 @@
       "name": "墙面 / 竖向面 07",
       "areaM2": 4.14179,
       "flipX": true,
-      "flipY": true
+      "flipY": true,
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:-8.089:-1",
@@ -114091,7 +114100,8 @@
       "name": "墙面 / 竖向面 08",
       "areaM2": 6.04178,
       "flipX": true,
-      "flipY": true
+      "flipY": true,
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:-8.289:-1",
@@ -115231,7 +115241,8 @@
       "name": "墙面 / 竖向面 09",
       "areaM2": 3.61001,
       "flipX": true,
-      "flipY": true
+      "flipY": true,
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:-8.889:1",
@@ -115379,7 +115390,8 @@
       "name": "墙面 / 竖向面 10",
       "areaM2": 0.0375,
       "flipX": true,
-      "flipY": true
+      "flipY": true,
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:-9.689:1",
@@ -115775,7 +115787,8 @@
       "name": "墙面 / 竖向面 11",
       "areaM2": 0.38,
       "flipX": true,
-      "flipY": true
+      "flipY": true,
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:-9.889:1",
@@ -116811,7 +116824,8 @@
       "name": "墙面 / 竖向面 12",
       "areaM2": 2.94588,
       "flipX": true,
-      "flipY": true
+      "flipY": true,
+      "internalWiringDiagonalRatio": 0.1
     }
   ],
   "checks": {

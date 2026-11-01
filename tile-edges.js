@@ -27,7 +27,8 @@ function isInternalDiagonal(surface,occurrences){
   // Blender may leave a few millimetres of slope on an authored horizontal
   // or vertical grout line. Only edges with balanced projected movement are
   // actual triangulation diagonals.
-  return Math.min(deltaA,deltaB)/Math.max(deltaA,deltaB)>0.1;
+  const diagonalRatio=Number.isFinite(surface.internalWiringDiagonalRatio)?surface.internalWiringDiagonalRatio:0.1;
+  return Math.min(deltaA,deltaB)/Math.max(deltaA,deltaB)>diagonalRatio;
 }
 
 export function tileSurfaceEdges(surface){

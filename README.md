@@ -1,4 +1,4 @@
-# O.家庭装修 · V.1.23
+# O.家庭装修 · V.1.24
 
 静态 GitHub Pages 版本，无需构建。首页为 index.html，使用随包提供的 Three.js 和模型。
 
@@ -13,4 +13,4 @@
 - GLB 使用无损 gzip 传输压缩，模型内容不变；线上模型数据按版本缓存。
 
 发布到 main 后由 .github/workflows/pages.yml 自动部署。
-访问 https://ohhhh233.github.io/kitchen-three/?v=1.23 。
+访问 https://ohhhh233.github.io/kitchen-three/?v=1.24 。

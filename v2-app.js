@@ -1,19 +1,19 @@
-import {syncDisplayControls,isWallObject} from './display-controls.js?v=1.23';
-import {loadCompressedGltf} from './model-loader.js?v=1.23';
-import {createSocketOutline} from './socket-outline.js?v=1.23';
-import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.23';
+import {syncDisplayControls,isWallObject} from './display-controls.js?v=1.24';
+import {loadCompressedGltf} from './model-loader.js?v=1.24';
+import {createSocketOutline} from './socket-outline.js?v=1.24';
+import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.24';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.23';
-import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.23';
-import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.23';
-import {dedupeTopViewDimensions} from './scene-math.js?v=1.23';
-import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.23';
-import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.23';
-import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.23';
-import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.23';
-import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.23';
+import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.24';
+import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.24';
+import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.24';
+import {dedupeTopViewDimensions} from './scene-math.js?v=1.24';
+import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.24';
+import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.24';
+import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.24';
+import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.24';
+import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.24';
 
 const $=s=>document.querySelector(s), ns='http://www.w3.org/2000/svg';
 const releaseVersion='1.23';
@@ -134,7 +134,9 @@ async function setupModel(){
   scene.environment=studioEnvironment(renderer);
   scene.add(new THREE.HemisphereLight(0xf8fbff,0xa2afbe,2.7));const key=new THREE.DirectionalLight(0xffffff,2.5);key.position.set(-5,10,-7);scene.add(key);const fill=new THREE.DirectionalLight(0xdceaff,1.4);fill.position.set(6,5,4);scene.add(fill);
   const loadStartedAt=performance.now();
-  const modelVersion=encodeURIComponent(data.exportedAt);
+  // GitHub releases use a stable version key so the HTML preload is reused;
+  // local imports keep the source export timestamp for cache busting.
+  const modelVersion=isHostedRelease?releaseVersion:encodeURIComponent(data.exportedAt);
   const gltf=await loadCompressedGltf(new GLTFLoader(),{
     url:data.modelCompressedFile?`./public/v2/${data.modelCompressedFile}?v=${modelVersion}`:null,
     fallbackUrl:`./public/v2/${data.modelFile}?v=${modelVersion}`,
@@ -166,13 +168,6 @@ async function setupModel(){
     if(o.material.length===1)o.material=o.material[0];
     meshEntries.push({mesh:o,name,materials:Array.isArray(o.material)?o.material:[o.material]});
   });
-  const floor2TileNames=new Set(Object.values(data.floor2TileGroups||{}).flat());
-  for(const entry of meshEntries){
-    if(floor2TileNames.has(entry.name))continue;
-    const geometry=new THREE.EdgesGeometry(entry.mesh.geometry,15);
-    const edge=new THREE.LineSegments(geometry,outlineMaterial(0x75808e));edge.renderOrder=200;edge.userData.socket=Boolean(entry.mesh.userData.socket);entry.mesh.add(edge);edgeEntries.push(edge);
-    if(entry.mesh.userData.socket){const highlight=createSocketOutline(geometry);entry.mesh.add(highlight);edge.highlightOutline=highlight;}
-  }
   renderer.domElement.addEventListener('click',placeAnnotationAt);
   addTileGeometry();
   bindTapToZoom(renderer.domElement,event=>{
@@ -208,6 +203,15 @@ function addTileGeometry(){
     }
   }
 }
+function ensureVisibleEdges(){
+  const floor2TileNames=new Set(Object.values(data.floor2TileGroups||{}).flat());
+  for(const entry of meshEntries){
+    if(!entry.mesh.visible||floor2TileNames.has(entry.name)||entry.edgesReady)continue;
+    const geometry=new THREE.EdgesGeometry(entry.mesh.geometry,15);
+    const edge=new THREE.LineSegments(geometry,outlineMaterial(0x75808e));edge.renderOrder=200;edge.userData.socket=Boolean(entry.mesh.userData.socket);entry.mesh.add(edge);edgeEntries.push(edge);entry.edgesReady=true;
+    if(entry.mesh.userData.socket){const highlight=createSocketOutline(geometry);entry.mesh.add(highlight);edge.highlightOutline=highlight;}
+  }
+}
 function viewDirection(){return new THREE.Vector3(...(state.view==='top'?[0,1,0]:state.view==='3d'?[1.15,.95,-1.45]:({front:[0,0,-1],back:[0,0,1],left:[-1,0,0],right:[1,0,0]})[state.direction])).normalize();}
 function applyPresentation(){
   const top=state.view==='top',focus=state.view==='3d'&&state.tileFocus;
@@ -233,6 +237,7 @@ function applyPresentation(){
     const socketObject=entry.mesh.userData.socket;
     const materials=entry.materials;for(const m of materials){m.color.setHex(socketObject?0x101010:!focus&&entry.name.includes('楼梯')?0xc4cfdb:style.color);m.opacity=style.opacity;m.transparent=style.transparent;m.depthWrite=style.depthWrite;m.needsUpdate=true;}
   }
+  ensureVisibleEdges();
   model?.traverse(o=>{if(o.isLight&&o.userData.floor2Light)o.visible=secondFloor&&state.floor2HardVisible;});
   const contextStyle=baseStyle;
   edgeEntries.forEach(edge=>{
@@ -625,7 +630,7 @@ function setSection(section){
   $('#surface-select').hidden=section===3;
   $('.tile-type-switch').hidden=section!==3;
   document.querySelectorAll('button[data-section]').forEach(button=>{const active=Number(button.dataset.section)===section;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-  document.title=`O.家庭装修 V.1.23 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
+  document.title=`O.家庭装修 V.1.24 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
   $('#layout').hidden=section===2;document.querySelector('nav a[href="#layout"]').hidden=section===2;$('#original-cutting').hidden=section===2;
   if(section===3)selectFloor2TileType('1200');else if(section===1)selectSurface('floor');
   $('#layout-title').textContent=section===3?`二楼瓷砖铺贴平面图 · ${floor2TileLabel(state.floor2TileType)}`:'铺贴排版平面图';$('#layout .section-heading .eyebrow').textContent=section===3?'03 / 独立排版图':'02 / 独立排版图';
@@ -635,7 +640,7 @@ function setSection(section){
   $('#measurement-title').textContent=section===1?'硬装尺寸':section===2?'橱柜吊柜尺寸':'二楼尺寸';
   $('#measurements .section-description').textContent=section===3&&!data.floor2Dimensions?.length?'二楼集合中没有单独的尺寸标尺。':`以下为源工程中的${sectionLabel}标尺；点击一行在模型中高亮。顶视只显示 X、Y 方向且不小于 100 mm 的尺寸。`;
   $('#model-canvas').setAttribute('aria-label',section===1?'一楼硬装三维视图':section===2?'橱柜吊柜区与一楼硬装三维视图':'二楼模型三维视图');
-  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.23`;
+  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.24`;
   const url=new URL(location);if(section===1)url.searchParams.delete('section');else url.searchParams.set('section',section);history.replaceState(null,'',url);
   applyPresentation();renderModelLabels();renderRulerTable();frameCamera();updateThumbnail();
 }
