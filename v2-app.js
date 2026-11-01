@@ -1,18 +1,18 @@
-import {syncDisplayControls,isWallObject} from './display-controls.js?v=1.19';
-import {createSocketOutline} from './socket-outline.js?v=1.19';
-import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.19';
+import {syncDisplayControls,isWallObject} from './display-controls.js?v=1.20';
+import {createSocketOutline} from './socket-outline.js?v=1.20';
+import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.20';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.19';
-import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.19';
-import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.19';
-import {dedupeTopViewDimensions} from './scene-math.js?v=1.19';
-import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.19';
-import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.19';
-import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.19';
-import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.19';
-import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.19';
+import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.20';
+import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.20';
+import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.20';
+import {dedupeTopViewDimensions} from './scene-math.js?v=1.20';
+import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.20';
+import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.20';
+import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.20';
+import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.20';
+import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.20';
 
 const $=s=>document.querySelector(s), ns='http://www.w3.org/2000/svg';
 const isHostedRelease=document.documentElement.dataset.release==='github'||/(?:^|\.)github\.io$/i.test(location.hostname);
@@ -476,7 +476,7 @@ function renderDrawing(){
   const lineSide=element('path',{d:`M${left-30} ${yTop}H${left+30}M${left} ${yTop}V${yBottom}M${left-30} ${yBottom}H${left+30}`,class:'drawing-outline'});svg.append(lineSide);
   const heightLabel=element('text',{x:left-85,y:(yTop+yBottom)/2,class:'drawing-dimension',transform:`rotate(-90 ${left-85} ${(yTop+yBottom)/2})`});heightLabel.textContent=mm(height)+' mm';heightLabel.setAttribute('font-size',Math.max(65,Math.max(width,height)*.014));svg.append(heightLabel);
   $('#drawing-caption').textContent=`${s.name} · ${s.axes.join(' / ')} 方向 · mm`;
-  const cut=state.section===3?data.floor2CuttingPlans?.[state.floor2TileType]:data.cuttingPlans?.[s.id];
+  const cut=state.section===3?data.floor2FloorCuttingPlans?.[state.floor2TileType]:data.cuttingPlans?.[s.id];
   $('#surface-spec').textContent=`标称 ${s.nominalMm.join(' × ')} mm · ${s.tiles.length} 块面 · 净面积 ${areaM2(s.areaM2)} m²${cut?` · 整面 ${cut.fullTilePieces??cut.fullTiles} · 切割面 ${cut.cutTilePieces??cut.cutPieces} · 理论下限 ${cut.theoreticalMinimumTiles} · 建议用砖 ${cut.estimatedStockTiles} 块`:''}`;
   $('#schedule-context').textContent=`当前区域 ${s.tiles.length} 块面，尺寸单位为毫米；编号可在图中定位。`;
   updateDrawingLabels();renderTileTable();updateTileDetail();
@@ -486,14 +486,33 @@ function zoomDrawing(factor,ratio={x:.5,y:.5}){const newW=drawView.w*factor,newH
 function updateDrawingLabels(){const show=$('#tile-label-toggle').checked;$('#tile-drawing').querySelectorAll('.tile-label-group').forEach(g=>g.style.display=show?'':'none');}
 function renderCuttingPlan(){
   const section=$('#original-cutting');if(!section)return;
-  const surface=currentSurface(),secondFloor=state.section===3;
-  const plan=secondFloor?data.floor2FloorCuttingPlans?.[state.floor2TileType]:data.cuttingPlans?.[surface.id],grid=$('#cutting-plan-grid');
-  section.hidden=state.section===2||!plan;if(section.hidden||!grid)return;
+  const surface=currentSurface();
+  const secondFloor=state.section===3;
+  // Board 3 uses the floor-only plan for the drawing. Wall plans remain
+  // separate so oversized wall pieces can be reviewed without inflating the
+  // floor stock count.
+  const plan=secondFloor
+    ? data.floor2FloorCuttingPlans?.[state.floor2TileType]
+    : data.cuttingPlans?.[surface.id];
+  const wallPlan=secondFloor
+    ? data.floor2WallCuttingPlans?.[state.floor2TileType]
+    : null;
+  const grid=$('#cutting-plan-grid');
+  section.hidden=state.section===2||!plan;
+  if(section.hidden||!grid)return;
   const stockW=plan.stockMm[0],stockH=plan.stockMm[1],pieceMap=new Map((secondFloor?data.floor2Surfaces:[surface]).flatMap(s=>s.tiles).map(tile=>[tile.id,tile]));
   section.querySelector('.eyebrow').textContent=secondFloor?'04 / 原砖切割图':'03 / 原砖切割图';
   $('#cutting-title').textContent=`原砖切割排版图 · ${stockW} × ${stockH} mm`;
-  $('#cutting-summary').textContent=`${secondFloor?'地砖':surface.name} · 已排 ${plan.stocks.length} 块原砖 · 建议备料 ${plan.estimatedStockTiles} 块 · 整面 ${plan.fullTilePieces??plan.fullTiles} · 切割面 ${plan.cutTilePieces??plan.cutPieces} · 理论下限 ${plan.theoreticalMinimumTiles}`;
-  const unplaced=$('#cutting-unplaced');unplaced.hidden=!plan.unplaced?.length;unplaced.textContent=plan.unplaced?.length?`待复核、未放入原砖的块面（尺寸超过 ${stockW} × ${stockH} mm）：${plan.unplaced.join('、')}`:'';
+  $('#cutting-summary').textContent=`${secondFloor?'地砖':surface.name} · 已排 ${plan.stocks.length} 块原砖 · 建议备料 ${plan.estimatedStockTiles} 块 · 整面 ${plan.fullTilePieces??plan.fullTiles} · 切割面 ${plan.cutTilePieces??plan.cutPieces} · 理论下限 ${plan.theoreticalMinimumTiles}${wallPlan?.unplaced?.length?' · 墙面待核对 '+wallPlan.unplaced.length+' 块':''}`;
+  const unplaced=$('#cutting-unplaced');
+  const floorNotice=plan.unplaced?.length
+    ? '地砖待复核、未放入原砖的块面：'+plan.unplaced.join('、')
+    : '';
+  const wallNotice=wallPlan?.unplaced?.length
+    ? '墙面待复核、未放入原砖的块面：'+wallPlan.unplaced.join('、')
+    : '';
+  unplaced.hidden=!(floorNotice||wallNotice);
+  unplaced.textContent=[floorNotice,wallNotice].filter(Boolean).join('；');
   grid.replaceChildren();
   const page=document.createElement('div');page.className='cutting-page';
   const pageTitle=document.createElement('div');pageTitle.className='cutting-page-title';pageTitle.textContent=`${stockW} × ${stockH} mm · 原砖切割图`;page.append(pageTitle);
@@ -566,7 +585,10 @@ function selectTile(id){state.selectedTile=id;$('#tile-drawing').querySelectorAl
 function updateTileDetail(){
   const s=currentSurface(),t=selectedTile();$('#tile-id').textContent=t.id;$('#tile-size').textContent=`${mm(t.widthMm)} × ${mm(t.heightMm)} mm`;$('#tile-shape').textContent=t.rectangle?'矩形块面':'异形块面 · 宽高为包络尺寸';$('#tile-position').textContent=`${s.tiles.indexOf(t)+1} / ${s.tiles.length}`;
   const entries=[['区域',s.name],['面积',areaM2(t.areaM2)+' m²'],['各边长度',t.edgeLengthsMm.map(mm).join(' / ')+' mm']];if(t.sourceFaceIds?.length>1)entries.push(['对应源块面',t.sourceFaceIds.join(' / ')]);if(t.heightMmFromOrigin!==null)entries.push(['源工程 Z 高度',mm(t.heightMmFromOrigin)+' mm']);
-  $('#tile-facts').replaceChildren(...entries.map(([term,value])=>{const row=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=term;dd.textContent=value;row.append(dt,dd);return row;}));$('#tile-warning').hidden=!t.oversize;$('#tile-warning').textContent=`该块面的包络尺寸超过 ${s.nominalMm.join(' × ')} mm 标称规格。图纸保留源模型形状，请核对拼缝或原砖规格。`;
+$('#tile-facts').replaceChildren(...entries.map(([term,value])=>{const row=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=term;dd.textContent=value;row.append(dt,dd);return row;}));
+const toleranceNote=t.fitWithinTolerance?`按标称 ${s.nominalMm.join(' × ')} mm 放入原砖排版；源模型实际尺寸为 ${mm(t.widthMm)} × ${mm(t.heightMm)} mm。`:'';
+$('#tile-warning').hidden=!(t.oversize||t.specialHandling||t.fitWithinTolerance);
+$('#tile-warning').textContent=t.specialHandling?`特殊处理块面：${t.specialHandling}`:t.fitWithinTolerance?toleranceNote:`该块面的包络尺寸超过 ${s.nominalMm.join(' × ')} mm 标称规格。图纸保留源模型形状，请核对拼缝或原砖规格。`;
 }
 function renderTileTable(){
   const query=$('#tile-search').value.trim().toUpperCase(),s=currentSurface();const tiles=s.tiles.filter(t=>t.id.includes(query));$('#empty-schedule').hidden=tiles.length>0;
@@ -594,7 +616,7 @@ function setSection(section){
   $('#surface-select').hidden=section===3;
   $('.tile-type-switch').hidden=section!==3;
   document.querySelectorAll('button[data-section]').forEach(button=>{const active=Number(button.dataset.section)===section;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-  document.title=`O.家庭装修 V.1.19 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
+  document.title=`O.家庭装修 V.1.20 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
   $('#layout').hidden=section===2;document.querySelector('nav a[href="#layout"]').hidden=section===2;$('#original-cutting').hidden=section===2;
   if(section===3)selectFloor2TileType('1200');else if(section===1)selectSurface('floor');
   $('#layout-title').textContent=section===3?`二楼瓷砖铺贴平面图 · ${floor2TileLabel(state.floor2TileType)}`:'铺贴排版平面图';$('#layout .section-heading .eyebrow').textContent=section===3?'03 / 独立排版图':'02 / 独立排版图';
@@ -604,7 +626,7 @@ function setSection(section){
   $('#measurement-title').textContent=section===1?'硬装尺寸':section===2?'橱柜吊柜尺寸':'二楼尺寸';
   $('#measurements .section-description').textContent=section===3&&!data.floor2Dimensions?.length?'二楼集合中没有单独的尺寸标尺。':`以下为源工程中的${sectionLabel}标尺；点击一行在模型中高亮。顶视只显示 X、Y 方向且不小于 100 mm 的尺寸。`;
   $('#model-canvas').setAttribute('aria-label',section===1?'一楼硬装三维视图':section===2?'橱柜吊柜区与一楼硬装三维视图':'二楼模型三维视图');
-  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.19`;
+  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.20`;
   const url=new URL(location);if(section===1)url.searchParams.delete('section');else url.searchParams.set('section',section);history.replaceState(null,'',url);
   applyPresentation();renderModelLabels();renderRulerTable();frameCamera();updateThumbnail();
 }
