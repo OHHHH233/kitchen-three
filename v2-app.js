@@ -1,20 +1,22 @@
-import {createSocketOutline} from './socket-outline.js?v=1.16';
-import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.16';
+import {syncDisplayControls,isWallObject} from './display-controls.js?v=1.17';
+import {createSocketOutline} from './socket-outline.js?v=1.17';
+import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.17';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.16';
-import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.16';
-import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.16';
-import {dedupeTopViewDimensions} from './scene-math.js?v=1.16';
-import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.16';
-import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.16';
-import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.16';
-import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.16';
-import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.16';
+import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.17';
+import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.17';
+import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.17';
+import {dedupeTopViewDimensions} from './scene-math.js?v=1.17';
+import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.17';
+import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.17';
+import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.17';
+import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.17';
+import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.17';
 
 const $=s=>document.querySelector(s), ns='http://www.w3.org/2000/svg';
-const isHostedRelease=/(?:^|\.)github\.io$/i.test(location.hostname);
+const isHostedRelease=document.documentElement.dataset.release==='github'||/(?:^|\.)github\.io$/i.test(location.hostname);
+document.documentElement.classList.toggle('github-release',isHostedRelease);
 const state={section:1,cabinetVisible:true,wallCabinetVisible:true,cabinetDimensions:true,wallCabinetDimensions:true,cabinetDoorsVisible:false,wallCabinetDoorsVisible:false,cabinetTransparency:70,floor2HardVisible:true,floor2SoftVisible:false,floor2Transparency:0,floor2TileType:'1200',view:'3d',perspectivePreset:null,direction:'front',edges:true,socketHighlights:{1:true,3:true},dimensions:true,tileFocus:true,ceilingVisible:false,contextTransparency:0,baseTransparency:0,tileTransparency:0,selectedRuler:null,selectedTile:null,surface:null};
 let data,section1Dimensions,section1Surfaces,renderer,controls,camera,model,modelBounds,cameraPresets={},offset,previewRenderer,previewCamera;
 const scene=new THREE.Scene(),root=new THREE.Group(),tileRoot=new THREE.Group();
@@ -23,14 +25,6 @@ const perspective=new THREE.PerspectiveCamera(42,1,.01,250),ortho=new THREE.Orth
 const raycaster=new THREE.Raycaster();let layoutDirty=true,focus=null,labels=[],lineSvg,meshEntries=[],edgeEntries=[];
 let sharedAnnotations=[],annotationPlacement=false,annotationDraft=null,annotationEditingId=null,annotationLayoutDirty=true,annotationDocument={version:2,models:{}};
 const mobile=matchMedia('(max-width:650px)'),reduced=matchMedia('(prefers-reduced-motion:reduce)');
-document.documentElement.classList.toggle('github-release',isHostedRelease);
-function syncRangeVisual(input){
-  if(!input||input.type!=='range')return;
-  const min=Number(input.min||0),max=Number(input.max||100),value=Number(input.value||0);
-  const progress=max>min?Math.max(0,Math.min(100,(value-min)/(max-min)*100)):0;
-  input.style.setProperty('--range-progress',`${progress}%`);
-}
-function syncAllRanges(){document.querySelectorAll('input[type="range"]').forEach(syncRangeVisual);}
 function element(tag,attrs={}){const e=document.createElementNS(ns,tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);return e;}
 function toThree(p){return new THREE.Vector3(p[0],p[2],-p[1]).add(offset||new THREE.Vector3());}
 function saveFile(text,type,name){const url=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);}
@@ -73,13 +67,7 @@ function layoutAnnotationMarkers(){
   });
 }
 async function loadAnnotations(){
-  if(isHostedRelease){
-    annotationDocument={version:2,models:{}};sharedAnnotations=[];
-    $('#annotation-toolbar')?.setAttribute('hidden','');$('#annotation-editor').hidden=true;
-    $('#shared-annotations').replaceChildren();annotationLayoutDirty=false;
-    annotationMessage('线上版本不显示本地标注。');
-    return;
-  }
+  if(isHostedRelease){sharedAnnotations=[];$('#annotation-toolbar').hidden=true;$('#annotation-editor').hidden=true;$('#shared-annotations').replaceChildren();return;}
   try{const response=await fetch('./public/annotations.json',{cache:'no-store'});if(response.ok)annotationDocument=await response.json();}
   catch{annotationDocument={version:2,models:{}};}
   if(!annotationDocument||typeof annotationDocument!=='object')annotationDocument={version:2,models:{}};
@@ -106,7 +94,7 @@ function placeAnnotationAt(event){
   annotationPlacement=false;renderer.domElement.classList.remove('placing-annotation');$('#annotation-mode').setAttribute('aria-pressed','false');$('#annotation-mode').textContent='＋ 标注';openAnnotationEditor(item,point,event.clientX,event.clientY);$('#annotation-text').focus();
 }
 function sectionDimensions(section){return section===1?section1Dimensions:section===2?[...data.section2.dimensions.map(d=>({...d,zone:'cabinet'})),...data.section3.dimensions.map(d=>({...d,zone:'wall-cabinet'}))]:(data.floor2Dimensions||[]);}
-function visibleDimensions(){return state.section===1?data.dimensions:state.section===2?data.dimensions.filter(d=>d.zone==='cabinet'?state.cabinetDimensions:state.wallCabinetDimensions):data.dimensions;}
+function visibleDimensions(){if(!state.dimensions)return [];return state.section===1?data.dimensions:state.section===2?data.dimensions.filter(d=>d.zone==='cabinet'?state.cabinetDimensions:state.wallCabinetDimensions):data.dimensions;}
 function formatLoadTime(seconds){const total=Math.max(1,Math.ceil(seconds));return total<60?`${total} 秒`:`${Math.floor(total/60)} 分 ${total%60} 秒`;}
 function isRenderableMesh(mesh){
   const position=mesh.geometry?.getAttribute?.('position');
@@ -136,8 +124,6 @@ function updateModelProgress(event,startedAt){
 
 async function setupModel(){
   const host=$('#model-canvas');
-  $('#space-controls').append($('.model-options'),$('.view-controls'));
-  $('.model-options').append($('#floor2-tile-group-controls'));
   renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));
   renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;
   host.replaceChildren(renderer.domElement);camera=perspective;
@@ -217,7 +203,7 @@ function viewDirection(){return new THREE.Vector3(...(state.view==='top'?[0,1,0]
 function applyPresentation(){
   const top=state.view==='top',focus=state.view==='3d'&&state.tileFocus;
   const context=state.section>1,secondFloor=state.section===3,tileOverlayView=secondFloor&&(state.view==='3d'||state.view==='top'),transparency=secondFloor?state.floor2Transparency:context?state.baseTransparency:state.contextTransparency;
-  $('#space-controls').classList.toggle('section3-active',secondFloor);
+  syncDisplayControls($('#display-dock'),state.section);
   const baseStyle=tilePresentation({view:context?'3d':state.view,focus:context||state.tileFocus,contextTransparency:transparency,kind:'hard'});
   for(const entry of meshEntries){
     const zone=entry.mesh.userData.cabinetZone;
@@ -230,10 +216,11 @@ function applyPresentation(){
     // The tile overlay is the authoritative colored surface in 3D/top views.
     // Hiding its coplanar source mesh prevents depth fighting and keeps all four
     // floor/wall specification groups equally visible when their group is active.
-    entry.mesh.visible=visible&&!entry.mesh.userData.invalidGeometry&&(!entry.mesh.userData.cabinetDoor||doorsVisible)&&!(secondFloorTileObject&&tileOverlayView);
+    entry.mesh.visible=visible&&(!entry.mesh.userData.socket||Boolean(state.socketHighlights[state.section]))&&!entry.mesh.userData.invalidGeometry&&(!entry.mesh.userData.cabinetDoor||doorsVisible)&&!(secondFloorTileObject&&tileOverlayView);
     const foreground=Boolean(zone)&&context;
     const cabinetOpacity=1-state.cabinetTransparency/100;
-    const style=foreground?{color:0xc5d6e9,opacity:cabinetOpacity,transparent:cabinetOpacity<1,depthWrite:cabinetOpacity===1}:context?baseStyle:tilePresentation({view:state.view,focus:state.tileFocus,contextTransparency:state.contextTransparency,kind:'hard',door:entry.name.includes('门')});
+    const background=state.section===2&&entry.mesh.userData.section===1;
+    const style=foreground?{color:0xc5d6e9,opacity:cabinetOpacity,transparent:cabinetOpacity<1,depthWrite:cabinetOpacity===1}:background||isWallObject(entry.name)?tilePresentation({view:'3d',focus:true,contextTransparency:transparency,kind:'hard'}):tilePresentation({view:state.view,focus:false,contextTransparency:0,kind:'hard',door:entry.name.includes('门')});
     const socketObject=entry.mesh.userData.socket;
     const materials=entry.materials;for(const m of materials){m.color.setHex(socketObject?0x101010:!focus&&entry.name.includes('楼梯')?0xc4cfdb:style.color);m.opacity=style.opacity;m.transparent=style.transparent;m.depthWrite=style.depthWrite;m.needsUpdate=true;}
   }
@@ -242,7 +229,8 @@ function applyPresentation(){
   edgeEntries.forEach(edge=>{
     const floor2Source=edge.userData.floor2TileSource,owner=floor2Source?edge.userData.ownerMesh:edge.parent;
     const foreground=(floor2Source?3:owner?.userData.section)===state.section&&state.section>1;
-    const style=foreground?{edgeOpacity:1}:contextStyle;
+    const background=state.section===2&&owner?.userData.section===1;
+    const style=background?contextStyle:foreground||!isWallObject(sourceName(owner))?{edgeOpacity:1}:contextStyle;
     const socketStyle=socketEdgeStyle({socket:edge.userData.socket,ownerSection:owner?.userData.section,section:state.section,highlight:state.socketHighlights[state.section],edges:state.edges,edgeOpacity:style.edgeOpacity});
     edge.visible=floor2Source?state.edges&&secondFloor&&tileOverlayView&&state.floor2HardVisible&&edge.userData.tileGroup===state.floor2TileType:Boolean(owner?.visible)&&socketStyle.visible;
     edge.userData.socketHighlighted=socketStyle.highlighted;
@@ -254,30 +242,29 @@ function applyPresentation(){
   });
   for(const mesh of tileRoot.children){const floor2Tile=mesh.userData.floor2,style=floor2Tile?tilePresentation({view:state.view,focus,contextTransparency:state.floor2Transparency,tileTransparency:state.tileTransparency,kind:mesh.userData.kind,sourceObject:TILE_FOCUS_OBJECT}):tilePresentation({view:state.view,focus:state.tileFocus,contextTransparency:state.contextTransparency,tileTransparency:state.tileTransparency,kind:mesh.userData.kind,sourceObject:mesh.userData.sourceObject});
     const floor2TypeVisible=!floor2Tile||mesh.userData.tileGroup===state.floor2TileType;
-    mesh.visible=floor2Tile?state.section===3&&state.floor2HardVisible&&floor2TypeVisible&&(state.view==='3d'||state.view==='top'):!context&&(mesh.userData.kind==='ceiling'?state.view==='3d'&&state.ceilingVisible:mesh.userData.kind==='floor'||(!top&&state.view==='3d'));
+    mesh.visible=floor2Tile?state.section===3&&state.floor2HardVisible&&floor2TypeVisible&&(state.view==='3d'||state.view==='top'):!context&&(mesh.userData.kind==='ceiling'?state.ceilingVisible:mesh.userData.kind==='floor'||(!top&&state.view==='3d'));
     const m=mesh.material;m.map=mesh.userData.kind==='ceiling'?(state.view==='3d'?mesh.userData.gradientMap:null):mesh.userData.gradientMap;m.color.setHex(mesh.userData.kind==='ceiling'?style.color:0xffffff);m.opacity=style.opacity;m.transparent=style.transparent;m.depthWrite=style.depthWrite;m.forceSinglePass=true;m.needsUpdate=true;
+    if(mesh.userData.kind==='wall'){m.opacity=1-transparency/100;m.transparent=m.opacity<1;m.depthWrite=m.opacity===1;}
     mesh.children.forEach(e=>{e.visible=state.edges;e.material.color.setHex(style.edgeColor);e.material.opacity=style.edgeOpacity;e.material.transparent=style.edgeOpacity<1;e.material.needsUpdate=true;e.renderOrder=style.target?210:focus?400:210;});
   }
-  $('#tile-focus-toggle').disabled=state.view!=='3d';$('#tile-focus-toggle').setAttribute('aria-pressed',state.tileFocus);$('#model-canvas').dataset.tileFocus=String(focus);
-  $('#ceiling-toggle').disabled=state.view!=='3d';$('#ceiling-toggle').setAttribute('aria-pressed',state.ceilingVisible);$('#model-canvas').dataset.ceilingVisible=String(state.view==='3d'&&state.ceilingVisible);
-  $('#context-transparency').disabled=!context&&!focus;$('#context-transparency-control').classList.toggle('disabled',!context&&!focus);
+  $('#model-canvas').dataset.tileFocus=String(focus);
+  $('#ceiling-toggle').checked=state.ceilingVisible;$('#model-canvas').dataset.ceilingVisible=String(state.view==='3d'&&state.ceilingVisible);
+  $('#context-transparency').disabled=false;
   $('#context-transparency').value=transparency;$('#context-transparency-value').value=transparency+'%';$('#context-transparency').setAttribute('aria-valuetext',transparency+'% 透明');
-  $('#global-dimension-control').hidden=context&&state.section===2;
-  $('#cabinet-controls').hidden=state.section!==2;$('#floor2-controls').hidden=!secondFloor;$('#floor2-tile-group-controls').hidden=!secondFloor;$('.model-options').classList.toggle('section2',state.section===2);$('.model-options').classList.toggle('section3',secondFloor);
-  $('#floor2-hard-visible').checked=state.floor2HardVisible;$('#floor2-soft-visible').checked=state.floor2SoftVisible;
+  $('#dimension-toggle').checked=state.dimensions;
   for(const [id,visible] of [['cabinet-visible',state.cabinetVisible],['cabinet-dimensions',state.cabinetDimensions],['cabinet-doors',state.cabinetDoorsVisible],['wall-cabinet-visible',state.wallCabinetVisible],['wall-cabinet-dimensions',state.wallCabinetDimensions],['wall-cabinet-doors',state.wallCabinetDoorsVisible]])$('#'+id).checked=visible;
   $('#cabinet-transparency').value=state.cabinetTransparency;$('#cabinet-transparency-value').value=state.cabinetTransparency+'%';$('#cabinet-transparency').setAttribute('aria-valuetext',state.cabinetTransparency+'% 透明');
-  syncAllRanges();
+  document.querySelectorAll('#display-dock input[type=range]').forEach(input=>input.style.setProperty('--range-progress',input.value+'%'));
   $('#model-canvas').dataset.doorsVisible=String(state.cabinetDoorsVisible||state.wallCabinetDoorsVisible);
   $('#model-canvas').dataset.cabinetTransparency=String(state.cabinetTransparency);
-  $('#edges-toggle').setAttribute('aria-pressed',state.edges);
-  $('#socket-highlight-control').hidden=state.section===2;$('#socket-highlight-toggle').checked=Boolean(state.socketHighlights[state.section]);
-  $('#direction').hidden=state.view!=='elevation';$('#model-thumbnail').hidden=state.view!=='elevation';
+  $('#edges-toggle').checked=state.edges;
+  $('#socket-highlight-toggle').checked=Boolean(state.socketHighlights[state.section]);
+  $('#model-thumbnail').hidden=true;
   annotationLayoutDirty=true;
   document.querySelectorAll('[data-view]').forEach(button=>{const active=button.dataset.view===state.view&&!(button.dataset.view==='3d'&&state.perspectivePreset);button.classList.toggle('active',active);button.setAttribute('aria-pressed',active);});
-  const presetActive=state.view==='3d'&&Boolean(state.perspectivePreset);$('#camera-preset-toggle').hidden=state.section!==2;$('#camera-preset-2-toggle').hidden=state.section!==2;$('#camera-preset-toggle').classList.toggle('active',presetActive&&state.perspectivePreset==='Camera_01');$('#camera-preset-toggle').setAttribute('aria-pressed',presetActive&&state.perspectivePreset==='Camera_01');$('#camera-preset-2-toggle').classList.toggle('active',presetActive&&state.perspectivePreset==='Camera_02');$('#camera-preset-2-toggle').setAttribute('aria-pressed',presetActive&&state.perspectivePreset==='Camera_02');
-  const directionName=$('#direction').selectedOptions[0].textContent;
-  $('#mode-label').textContent=state.view==='3d'?(state.perspectivePreset==='Camera_02'?'吊柜透视尺寸':state.perspectivePreset==='Camera_01'?'橱柜透视尺寸':secondFloor?'透视 · 二楼':context?'透视 · 橱柜吊柜区':focus?'透视 · 铺贴突出显示':'透视 · 3D'):state.view==='top'?'正交 · 顶视':`正交 · ${directionName}`;
+  const presetActive=state.view==='3d'&&Boolean(state.perspectivePreset);$('#camera-preset-toggle').classList.toggle('active',presetActive&&state.perspectivePreset==='Camera_01');$('#camera-preset-toggle').setAttribute('aria-pressed',presetActive&&state.perspectivePreset==='Camera_01');$('#camera-preset-2-toggle').classList.toggle('active',presetActive&&state.perspectivePreset==='Camera_02');$('#camera-preset-2-toggle').setAttribute('aria-pressed',presetActive&&state.perspectivePreset==='Camera_02');
+  const directionName='';
+  $('#mode-label').textContent=state.view==='3d'?(state.perspectivePreset==='Camera_02'?'吊柜透视图':state.perspectivePreset==='Camera_01'?'橱柜透视图':secondFloor?'透视 · 二楼':context?'透视 · 橱柜吊柜区':focus?'透视 · 铺贴突出显示':'透视 · 3D'):state.view==='top'?'正交 · 顶视':`正交 · ${directionName}`;
   const visibleBase=new Set(meshEntries.filter(e=>e.mesh.visible&&e.mesh.userData.section===1).map(e=>e.name));const visibleCabinets=new Set(meshEntries.filter(e=>e.mesh.visible&&e.mesh.userData.section>1).map(e=>e.name));
   $('#model-canvas').dataset.view=state.view;$('#model-canvas').dataset.section=String(state.section);$('#model-canvas').dataset.visibleBase=String(visibleBase.size);$('#model-canvas').dataset.visibleCabinets=String(visibleCabinets.size);$('#model-canvas').dataset.loaded='section'+state.section;
   $('#model-hint').textContent=state.view==='3d'?'拖拽旋转 · 滚轮缩放 · 右键平移 · 手机轻点放大':'滚轮缩放 · 右键平移 · 手机轻点放大';
@@ -308,9 +295,10 @@ function frameCamera(){
     camera.position.copy(target).addScaledVector(dir,distance);
   }
   else{const horizontal=state.view==='top'?size.x:['left','right'].includes(state.direction)?size.z:size.x;const vertical=state.view==='top'?size.z:size.y;const half=Math.max(vertical/2,horizontal/(2*aspect))*(mobile.matches?1.42:1.25);camera.left=-half*aspect;camera.right=half*aspect;camera.top=half;camera.bottom=-half;camera.position.copy(target).addScaledVector(dir,size.length()+5);}
+  if(state.section===2&&state.view==='top') [camera.top,camera.bottom]=[camera.bottom,camera.top];
   camera.updateProjectionMatrix();camera.lookAt(target);controls.target.copy(target);controls.enableRotate=state.view==='3d';controls.maxPolarAngle=state.view==='3d'?Math.PI/2-.01:Math.PI;controls.update();placeModelLabels();layoutDirty=true;
 }
-function setView(view){state.view=view;state.perspectivePreset=null;applyPresentation();renderModelLabels();frameCamera();}
+function setView(view){if(!['3d','top'].includes(view))return;state.view=view;state.perspectivePreset=null;applyPresentation();renderModelLabels();frameCamera();}
 function setPerspectiveView(){setPerspectivePreset('Camera_01');}
 function setPerspectiveView2(){setPerspectivePreset('Camera_02');}
 function setPerspectivePreset(name){
@@ -329,7 +317,7 @@ function setPerspectivePreset(name){
 }
 
 function renderModelLabels(){
-  const host=$('#model-annotations');host.replaceChildren();labels=[];lineSvg=element('svg',{'aria-hidden':'true'});host.append(lineSvg);if(state.section===1&&!state.dimensions)return;
+  const host=$('#model-annotations');host.replaceChildren();labels=[];lineSvg=element('svg',{'aria-hidden':'true'});host.append(lineSvg);if(!state.dimensions)return;
   const sourceDimensions=state.section===1?data.dimensions:visibleDimensions();
   const cameraDimensions=sourceDimensions;
   const dimensions=state.view==='top'?dedupeTopViewDimensions(cameraDimensions):cameraDimensions.filter(d=>dimensionVisible(d,state.view,state.direction));
@@ -571,7 +559,7 @@ function selectRuler(id,scroll){state.selectedRuler=state.selectedRuler===id?nul
 function setSection(section){
   if(!model)return;
   if(![1,2,3].includes(section))return;
-  state.section=section;state.selectedRuler=null;state.view='3d';state.perspectivePreset=section===2?'Camera_01':null;activateAnnotationSection();
+  state.section=section;state.dimensions=true;state.selectedRuler=null;state.view='3d';state.perspectivePreset=section===2?'Camera_01':null;activateAnnotationSection();
   if(section===2){
     state.cabinetVisible=true;state.cabinetDimensions=true;state.cabinetDoorsVisible=false;
     state.wallCabinetVisible=false;state.wallCabinetDimensions=false;state.wallCabinetDoorsVisible=false;
@@ -585,19 +573,17 @@ function setSection(section){
   $('#surface-select').hidden=section===3;
   $('.tile-type-switch').hidden=section!==3;
   document.querySelectorAll('button[data-section]').forEach(button=>{const active=Number(button.dataset.section)===section;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-  document.title=`O.家庭装修 V.1.16 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
+  document.title=`O.家庭装修 V.1.17 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
   $('#layout').hidden=section===2;document.querySelector('nav a[href="#layout"]').hidden=section===2;$('#original-cutting').hidden=section===2;
   if(section===3)selectFloor2TileType('1200');else if(section===1)selectSurface('floor');
   $('#layout-title').textContent=section===3?`二楼瓷砖铺贴平面图 · ${floor2TileLabel(state.floor2TileType)}`:'铺贴排版平面图';$('#layout .section-heading .eyebrow').textContent=section===3?'03 / 独立排版图':'02 / 独立排版图';
-  $('.model-options').classList.toggle('section2',section===2);$('.model-options').classList.toggle('section3',section===3);
-  $('.settings-primary').hidden=section>1;
-  $('#context-transparency-control>span').textContent=section===1?'其余模型透明度':section===2?'一楼硬装透明度':'二楼模型透明度';
+  $('#context-transparency-control>span').textContent=section===2?'一楼硬装透明度':'墙面透明度';
   $('#context-transparency').value=section===3?state.floor2Transparency:section===2?state.baseTransparency:state.contextTransparency;$('#context-transparency-value').value=$('#context-transparency').value+'%';
-  $('#context-transparency-help').textContent=section===1?'0% 为不透明，100% 为完全透明，仅在 3D 突出铺贴时生效':'0% 为不透明，100% 为完全透明，所有视图生效';
+  $('#context-transparency-help').textContent=section===2?'0% 为不透明，100% 为完全透明；控制整组一楼硬装背景，橱柜与吊柜由另一根滑条独立控制。':'0% 为不透明，100% 为完全透明；控制墙体及墙面铺贴，不影响地面和插座。';
   $('#measurement-title').textContent=section===1?'硬装尺寸':section===2?'橱柜吊柜尺寸':'二楼尺寸';
   $('#measurements .section-description').textContent=section===3&&!data.floor2Dimensions?.length?'二楼集合中没有单独的尺寸标尺。':`以下为源工程中的${sectionLabel}标尺；点击一行在模型中高亮。顶视只显示 X、Y 方向且不小于 100 mm 的尺寸。`;
   $('#model-canvas').setAttribute('aria-label',section===1?'一楼硬装三维视图':section===2?'橱柜吊柜区与一楼硬装三维视图':'二楼模型三维视图');
-  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.16`;
+  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.17`;
   const url=new URL(location);if(section===1)url.searchParams.delete('section');else url.searchParams.set('section',section);history.replaceState(null,'',url);
   applyPresentation();renderModelLabels();renderRulerTable();frameCamera();updateThumbnail();
 }
@@ -605,15 +591,12 @@ function setSection(section){
 function bindEvents(){
   document.querySelectorAll('button[data-section]').forEach(button=>button.addEventListener('click',()=>setSection(Number(button.dataset.section))));
   for(const [id,key] of [['cabinet-visible','cabinetVisible'],['cabinet-dimensions','cabinetDimensions'],['cabinet-doors','cabinetDoorsVisible'],['wall-cabinet-visible','wallCabinetVisible'],['wall-cabinet-dimensions','wallCabinetDimensions'],['wall-cabinet-doors','wallCabinetDoorsVisible']])$('#'+id).addEventListener('change',e=>{state[key]=e.target.checked;applyPresentation();if(id.endsWith('dimensions'))renderModelLabels();if(id.endsWith('visible'))frameCamera();});
-  $('#cabinet-transparency').addEventListener('input',e=>{syncRangeVisual(e.target);state.cabinetTransparency=Number(e.target.value);applyPresentation();});
+  $('#cabinet-transparency').addEventListener('input',e=>{state.cabinetTransparency=Number(e.target.value);applyPresentation();});
   $('#socket-highlight-toggle').addEventListener('change',e=>{state.socketHighlights[state.section]=e.target.checked;applyPresentation();});
-  $('#ceiling-toggle').addEventListener('click',()=>{state.ceilingVisible=!state.ceilingVisible;applyPresentation();});
-  $('#tile-focus-toggle').addEventListener('click',()=>{state.tileFocus=!state.tileFocus;applyPresentation();frameCamera();});
-  $('#context-transparency').addEventListener('input',e=>{syncRangeVisual(e.target);if(state.section===3)state.floor2Transparency=Number(e.target.value);else if(state.section===2)state.baseTransparency=Number(e.target.value);else state.contextTransparency=Number(e.target.value);applyPresentation();});
-  $('#floor2-hard-visible').addEventListener('change',e=>{state.floor2HardVisible=e.target.checked;applyPresentation();frameCamera();});
-  $('#floor2-soft-visible').addEventListener('change',e=>{state.floor2SoftVisible=e.target.checked;applyPresentation();frameCamera();});
-  document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));$('#camera-preset-toggle').addEventListener('click',setPerspectiveView);$('#camera-preset-2-toggle').addEventListener('click',setPerspectiveView2);$('#direction').addEventListener('change',e=>{state.direction=e.target.value;setView('elevation');});
-$('#edges-toggle').addEventListener('click',()=>{state.edges=!state.edges;applyPresentation();});$('#dimension-toggle').addEventListener('change',e=>{state.dimensions=e.target.checked;renderModelLabels();});$('#reset-camera').addEventListener('click',frameCamera);$('#retry').addEventListener('click',()=>location.reload());
+  $('#ceiling-toggle').addEventListener('change',event=>{state.ceilingVisible=event.target.checked;applyPresentation();});
+  $('#context-transparency').addEventListener('input',e=>{if(state.section===3)state.floor2Transparency=Number(e.target.value);else if(state.section===2)state.baseTransparency=Number(e.target.value);else state.contextTransparency=Number(e.target.value);applyPresentation();});
+  document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));$('#camera-preset-toggle').addEventListener('click',setPerspectiveView);$('#camera-preset-2-toggle').addEventListener('click',setPerspectiveView2);
+$('#edges-toggle').addEventListener('change',event=>{state.edges=event.target.checked;applyPresentation();});$('#dimension-toggle').addEventListener('change',e=>{state.dimensions=e.target.checked;renderModelLabels();});$('#reset-camera').addEventListener('click',frameCamera);$('#retry').addEventListener('click',()=>location.reload());
   $('#surface-select').addEventListener('change',e=>selectSurface(e.target.value));$('#tile-search').addEventListener('input',renderTileTable);$('#tile-label-toggle').addEventListener('change',updateDrawingLabels);
   document.querySelectorAll('[data-tile-type]').forEach(button=>button.addEventListener('click',()=>selectFloor2TileType(button.dataset.tileType)));
   $('#drawing-in').addEventListener('click',()=>zoomDrawing(.8));$('#drawing-out').addEventListener('click',()=>zoomDrawing(1.25));$('#drawing-reset').addEventListener('click',()=>{drawView={...initialDrawView};setDrawingView();});
@@ -621,8 +604,8 @@ $('#edges-toggle').addEventListener('click',()=>{state.edges=!state.edges;applyP
   svg.addEventListener('pointerdown',e=>{if(e.button!==0)return;dragStart={id:e.pointerId,x:e.clientX,y:e.clientY,view:{...drawView},moved:false};});svg.addEventListener('pointermove',e=>{if(!dragStart||dragStart.id!==e.pointerId)return;const dx=e.clientX-dragStart.x,dy=e.clientY-dragStart.y;if(Math.hypot(dx,dy)>5){dragStart.moved=true;svg.setPointerCapture(e.pointerId);}if(!dragStart.moved)return;const r=svg.getBoundingClientRect();drawView={...dragStart.view,x:dragStart.view.x-dx/r.width*dragStart.view.w,y:dragStart.view.y-dy/r.height*dragStart.view.h};setDrawingView();});svg.addEventListener('pointerup',()=>dragStart=null);svg.addEventListener('pointercancel',()=>dragStart=null);
   $('#download-csv').addEventListener('click',()=>saveFile(scheduleCsv(state.section>1?{...data,surfaces:[]}:data),'text/csv;charset=utf-8',`${data.section}_全部尺寸_2.0.csv`));
   $('#annotation-mode').addEventListener('click',event=>{annotationPlacement=!annotationPlacement;event.currentTarget.setAttribute('aria-pressed',String(annotationPlacement));event.currentTarget.textContent=annotationPlacement?'取消标注':'＋ 标注';if(annotationPlacement){annotationEditingId=null;annotationDraft=null;$('#annotation-editor').hidden=true;startAnnotationPlacement();}else{renderer.domElement.classList.remove('placing-annotation');annotationMessage('选点已取消。');}});
-  $('#annotation-default-size').addEventListener('input',event=>{syncRangeVisual(event.target);$('#annotation-default-size-value').value=event.target.value;});
-  $('#annotation-size').addEventListener('input',event=>{syncRangeVisual(event.target);$('#annotation-size-value').value=event.target.value;});
+  $('#annotation-default-size').addEventListener('input',event=>{$('#annotation-default-size-value').value=event.target.value;});
+  $('#annotation-size').addEventListener('input',event=>{$('#annotation-size-value').value=event.target.value;});
   $('#annotation-editor-close').addEventListener('click',()=>{$('#annotation-editor').hidden=true;annotationEditingId=null;annotationDraft=null;});
   $('#annotation-reposition').addEventListener('click',()=>{$('#annotation-editor').hidden=true;startAnnotationPlacement();});
   $('#annotation-delete').addEventListener('click',()=>{if(!annotationEditingId||!confirm('删除这条本机标注？'))return;sharedAnnotations=sharedAnnotations.filter(item=>item.id!==annotationEditingId);annotationEditingId=null;annotationDraft=null;$('#annotation-editor').hidden=true;persistLocalAnnotations();});
@@ -644,8 +627,5 @@ async function boot(){
   }catch(error){console.error(error);$('#model-loading').hidden=true;$('#model-error').hidden=false;$('#error-detail').textContent=error.message;}
 }
 void boot();
-
-
-
 
 
