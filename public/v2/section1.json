@@ -4,7 +4,7 @@
   "source": "K:\\家装修\\厨房+二楼装修_v2.blend",
   "sourceModifiedAt": "2026-11-01T22:24:15.158776+08:00",
   "sourceSha256": "870fec06eb2386c8bc83b85e998403865b1e6f14ae628cd799aff5a0f0db4197",
-  "exportedAt": "2026-11-01T22:46:52.821201+08:00",
+  "exportedAt": "2026-11-01T23:04:48.157540+08:00",
   "unit": "m",
   "displayUnit": "mm",
   "unitScale": 1.0,
@@ -94732,7 +94732,9 @@
     }
   },
   "modelFile": "section1.glb",
-  "modelFileSizeBytes": 12340508,
+  "modelFileSizeBytes": 12341180,
+  "modelCompressedFile": "section1.glb.gz",
+  "modelDownloadSizeBytes": 7067291,
   "dimensions": [
     {
       "id": "硬装尺寸.001「固定尺寸」",

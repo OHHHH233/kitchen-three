@@ -1,20 +1,22 @@
-import {syncDisplayControls,isWallObject} from './display-controls.js?v=1.22';
-import {createSocketOutline} from './socket-outline.js?v=1.22';
-import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.22';
+import {syncDisplayControls,isWallObject} from './display-controls.js?v=1.23';
+import {loadCompressedGltf} from './model-loader.js?v=1.23';
+import {createSocketOutline} from './socket-outline.js?v=1.23';
+import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.23';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.22';
-import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.22';
-import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.22';
-import {dedupeTopViewDimensions} from './scene-math.js?v=1.22';
-import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.22';
-import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.22';
-import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.22';
-import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.22';
-import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.22';
+import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.23';
+import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.23';
+import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.23';
+import {dedupeTopViewDimensions} from './scene-math.js?v=1.23';
+import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.23';
+import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.23';
+import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.23';
+import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.23';
+import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.23';
 
 const $=s=>document.querySelector(s), ns='http://www.w3.org/2000/svg';
+const releaseVersion='1.23';
 const isHostedRelease=document.documentElement.dataset.release==='github'||/(?:^|\.)github\.io$/i.test(location.hostname);
 document.documentElement.classList.toggle('github-release',isHostedRelease);
 const state={section:1,cabinetVisible:true,wallCabinetVisible:true,cabinetDimensions:true,wallCabinetDimensions:true,cabinetDoorsVisible:false,wallCabinetDoorsVisible:false,cabinetTransparency:70,floor2HardVisible:true,floor2SoftVisible:false,floor2Transparency:0,floor2TileType:'1200',view:'3d',perspectivePreset:null,direction:'front',edges:true,socketHighlights:{1:true,3:true},dimensions:true,tileFocus:true,ceilingVisible:false,contextTransparency:0,baseTransparency:0,tileTransparency:0,selectedRuler:null,selectedTile:null,surface:null};
@@ -115,11 +117,11 @@ function validModelBounds(sceneRoot){
   return bounds;
 }
 function updateModelProgress(event,startedAt){
-  const loaded=event.loaded||0,total=data?.modelFileSizeBytes||event.total||0,percent=total?Math.min(100,Math.round(loaded/total*100)):0;
+  const loaded=event.loaded||0,total=event.total||data?.modelDownloadSizeBytes||data?.modelFileSizeBytes||0,percent=total?Math.min(100,Math.round(loaded/total*100)):0;
   const elapsed=(performance.now()-startedAt)/1000,speed=elapsed>0?loaded/elapsed:0,remaining=speed&&total?Math.max(0,(total-loaded)/speed):0;
   const progress=$('#model-load-progress'),fill=$('#model-load-progress-fill');progress.setAttribute('aria-valuenow',String(percent));fill.style.width=percent+'%';
   const loadedMb=(loaded/1048576).toFixed(1),totalMb=(total/1048576).toFixed(1),speedMb=(speed/1048576).toFixed(1);
-  $('#model-load-detail').textContent=total?percent===100?`模型已载入 ${totalMb} MB · 正在解析模型…`:`${loadedMb} / ${totalMb} MB · ${percent}% · ${speedMb} MB/s · 预计剩余 ${formatLoadTime(remaining)}`:`模型已载入 ${loadedMb} MB · 正在读取…`;
+  $('#model-load-detail').textContent=total?percent===100?`模型文件已下载 ${totalMb} MB · 正在解压并解析…`:`${loadedMb} / ${totalMb} MB · ${percent}% · ${speedMb} MB/s · 预计剩余 ${formatLoadTime(remaining)}`:`已下载 ${loadedMb} MB · 正在读取…`;
 }
 
 async function setupModel(){
@@ -132,7 +134,14 @@ async function setupModel(){
   scene.environment=studioEnvironment(renderer);
   scene.add(new THREE.HemisphereLight(0xf8fbff,0xa2afbe,2.7));const key=new THREE.DirectionalLight(0xffffff,2.5);key.position.set(-5,10,-7);scene.add(key);const fill=new THREE.DirectionalLight(0xdceaff,1.4);fill.position.set(6,5,4);scene.add(fill);
   const loadStartedAt=performance.now();
-  const gltf=await new GLTFLoader().loadAsync(`./public/v2/${data.modelFile}?v=${encodeURIComponent(data.exportedAt)}`,event=>updateModelProgress(event,loadStartedAt));
+  const modelVersion=encodeURIComponent(data.exportedAt);
+  const gltf=await loadCompressedGltf(new GLTFLoader(),{
+    url:data.modelCompressedFile?`./public/v2/${data.modelCompressedFile}?v=${modelVersion}`:null,
+    fallbackUrl:`./public/v2/${data.modelFile}?v=${modelVersion}`,
+    expectedBytes:data.modelDownloadSizeBytes,
+    onProgress:event=>updateModelProgress(event,loadStartedAt),
+    cache:isHostedRelease?'force-cache':'no-store',
+  });
   model=gltf.scene;model.updateMatrixWorld(true);const rawBounds=validModelBounds(model);
   if(rawBounds.isEmpty())throw new Error('模型没有可显示的有效网格');
   const center=rawBounds.getCenter(new THREE.Vector3());offset=new THREE.Vector3(-center.x,-rawBounds.min.y,-center.z);model.position.add(offset);root.add(model);model.updateMatrixWorld(true);modelBounds=validModelBounds(model);
@@ -616,7 +625,7 @@ function setSection(section){
   $('#surface-select').hidden=section===3;
   $('.tile-type-switch').hidden=section!==3;
   document.querySelectorAll('button[data-section]').forEach(button=>{const active=Number(button.dataset.section)===section;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-  document.title=`O.家庭装修 V.1.22 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
+  document.title=`O.家庭装修 V.1.23 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
   $('#layout').hidden=section===2;document.querySelector('nav a[href="#layout"]').hidden=section===2;$('#original-cutting').hidden=section===2;
   if(section===3)selectFloor2TileType('1200');else if(section===1)selectSurface('floor');
   $('#layout-title').textContent=section===3?`二楼瓷砖铺贴平面图 · ${floor2TileLabel(state.floor2TileType)}`:'铺贴排版平面图';$('#layout .section-heading .eyebrow').textContent=section===3?'03 / 独立排版图':'02 / 独立排版图';
@@ -626,7 +635,7 @@ function setSection(section){
   $('#measurement-title').textContent=section===1?'硬装尺寸':section===2?'橱柜吊柜尺寸':'二楼尺寸';
   $('#measurements .section-description').textContent=section===3&&!data.floor2Dimensions?.length?'二楼集合中没有单独的尺寸标尺。':`以下为源工程中的${sectionLabel}标尺；点击一行在模型中高亮。顶视只显示 X、Y 方向且不小于 100 mm 的尺寸。`;
   $('#model-canvas').setAttribute('aria-label',section===1?'一楼硬装三维视图':section===2?'橱柜吊柜区与一楼硬装三维视图':'二楼模型三维视图');
-  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.22`;
+  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.23`;
   const url=new URL(location);if(section===1)url.searchParams.delete('section');else url.searchParams.set('section',section);history.replaceState(null,'',url);
   applyPresentation();renderModelLabels();renderRulerTable();frameCamera();updateThumbnail();
 }
@@ -662,7 +671,8 @@ $('#edges-toggle').addEventListener('change',event=>{state.edges=event.target.ch
 
 async function boot(){
   try{
-    const response=await fetch('./public/v2/section1.json',{cache:'no-store'});if(!response.ok)throw Error(`尺寸数据读取失败：HTTP ${response.status}`);data=validateSection(await response.json());section1Dimensions=data.dimensions;
+    const dataUrl=`./public/v2/section1.json${isHostedRelease?`?v=${releaseVersion}`:''}`;
+    const response=await fetch(dataUrl,{cache:isHostedRelease?'force-cache':'no-store'});if(!response.ok)throw Error(`尺寸数据读取失败：HTTP ${response.status}`);data=validateSection(await response.json());section1Dimensions=data.dimensions;
     $('#surface-select').replaceChildren(...data.surfaces.map(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=`${s.name}（${s.tiles.length}）`;return o;}));
     $('#layout-counts').replaceChildren(...data.tileObjects.map(o=>{const s=document.createElement('span');s.textContent=`${o.nominalMm.join(' × ')} · ${o.tileCount??o.faceCount} 块面`;return s;}));
     section1Surfaces=data.surfaces;bindEvents();selectSurface('floor');renderRulerTable();document.body.dataset.ready='section1';
