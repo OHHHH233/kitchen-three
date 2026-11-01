@@ -79,6 +79,19 @@
 .layout-workspace .drawing-host { padding: 14px; }
 .layout-toolbar { gap: 16px; padding: 18px; }
 .layout-toolbar > #surface-spec { max-width: 560px; }
+.layout-toolbar .surface-label { display: none !important; }
+.drawing-controls > button[aria-label] {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  min-height: 42px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  line-height: 1;
+  text-align: center;
+  vertical-align: middle;
+}
 .drawing-caption { padding-inline: 16px; }
 html.github-release :is(.annotation-toolbar,.annotation-editor,#shared-annotations) { display: none !important; }
 @media (max-width: 650px) {

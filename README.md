@@ -1,4 +1,4 @@
-# O.家庭装修 · V.1.17
+# O.家庭装修 · V.1.18
 
 静态 GitHub Pages 版本，无需构建。首页为 index.html，使用随包提供的 Three.js 和模型。
 
@@ -12,4 +12,4 @@
 - 模型从最新已保存 Blender 工程重新导出；release.json 和 SHA256SUMS.json 记录校验值。
 
 发布到 main 后由 .github/workflows/pages.yml 自动部署。
-访问 https://ohhhh233.github.io/kitchen-three/?v=1.17 。
+访问 https://ohhhh233.github.io/kitchen-three/?v=1.18 。

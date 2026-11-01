@@ -1,18 +1,18 @@
-import {syncDisplayControls,isWallObject} from './display-controls.js?v=1.17';
-import {createSocketOutline} from './socket-outline.js?v=1.17';
-import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.17';
+import {syncDisplayControls,isWallObject} from './display-controls.js?v=1.18';
+import {createSocketOutline} from './socket-outline.js?v=1.18';
+import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.18';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.17';
-import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.17';
-import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.17';
-import {dedupeTopViewDimensions} from './scene-math.js?v=1.17';
-import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.17';
-import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.17';
-import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.17';
-import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.17';
-import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.17';
+import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.18';
+import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.18';
+import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.18';
+import {dedupeTopViewDimensions} from './scene-math.js?v=1.18';
+import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.18';
+import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.18';
+import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.18';
+import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.18';
+import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.18';
 
 const $=s=>document.querySelector(s), ns='http://www.w3.org/2000/svg';
 const isHostedRelease=document.documentElement.dataset.release==='github'||/(?:^|\.)github\.io$/i.test(location.hostname);
@@ -276,7 +276,28 @@ function frameCamera(){
   const aspect=host.clientWidth/host.clientHeight;
   const cameraPreset=cameraPresets[state.perspectivePreset];
   if(state.view==='3d'&&cameraPreset){
-    camera=perspective;controls.object=perspective;perspective.fov=cameraPreset.fov;perspective.aspect=aspect;perspective.position.copy(cameraPreset.position);perspective.quaternion.copy(cameraPreset.quaternion);perspective.updateProjectionMatrix();controls.target.copy(cameraPreset.target);controls.enableRotate=true;controls.maxPolarAngle=Math.PI/2-.01;controls.update();placeModelLabels();layoutDirty=true;return;
+    camera=perspective;controls.object=perspective;perspective.fov=cameraPreset.fov;perspective.aspect=aspect;
+    // Keep authored direction while adding enough distance for narrow phone canvases.
+    const viewDirection=new THREE.Vector3(0,0,-1).applyQuaternion(cameraPreset.quaternion).normalize();
+    const baseDistance=Math.max(cameraPreset.position.distanceTo(cameraPreset.target),.1);
+    let distance=baseDistance*(aspect<1?Math.min(2.4,Math.max(1.35,1.25/aspect)):1.06);
+    const fitPoints=[];
+    for(const entry of meshEntries){
+      if(!entry.mesh.visible)continue;
+      const bounds=new THREE.Box3().setFromObject(entry.mesh);if(bounds.isEmpty())continue;
+      for(const x of [bounds.min.x,bounds.max.x])for(const y of [bounds.min.y,bounds.max.y])for(const z of [bounds.min.z,bounds.max.z])fitPoints.push(new THREE.Vector3(x,y,z));
+    }
+    const margin=aspect<1?.9:.94;
+    for(let pass=0;pass<3;pass++){
+      perspective.position.copy(cameraPreset.target).addScaledVector(viewDirection,-distance);
+      perspective.quaternion.copy(cameraPreset.quaternion);perspective.updateProjectionMatrix();perspective.updateMatrixWorld(true);
+      let extent=0;
+      for(const point of fitPoints){const projected=point.clone().project(perspective);if(Number.isFinite(projected.x)&&Number.isFinite(projected.y))extent=Math.max(extent,Math.abs(projected.x),Math.abs(projected.y));}
+      if(extent<=margin||!extent)break;
+      distance*=Math.min(1.55,extent/margin*1.04);
+    }
+    perspective.position.copy(cameraPreset.target).addScaledVector(viewDirection,-distance);perspective.quaternion.copy(cameraPreset.quaternion);perspective.updateProjectionMatrix();
+    controls.target.copy(cameraPreset.target);controls.enableRotate=true;controls.maxPolarAngle=Math.PI/2-.01;controls.update();placeModelLabels();layoutDirty=true;return;
   }
   const box=modelBounds.clone(),fitPoints=[];
   if(state.view==='3d'){
