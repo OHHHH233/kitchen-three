@@ -8,7 +8,7 @@
   "cutting-geometry.js": "afb405663b5567d8b7781bf5b95ea8d9eed99df64a118ee22babfdcd137c68a9",
   "display-controls.css": "45a119a55b0f3758ea5b1ed964f319d163f0643d942e19053509fe92d972caea",
   "display-controls.js": "43ce18d5215d08e617a59556a361bbd0f8373c034623289e63fd1845955aa175",
-  "index.html": "7fd988223aaa7dc754293827c3024bada3552b645abdcfabb083483ee60beaf2",
+  "index.html": "e47b0f9d5773d38a98faa3ab948392b8fee7b8cc6fdeb93ba05e5dc66ed6b22c",
   "package.json": "9034fecf5b3f99177c8fed86f732e6d41d6d037973177fe9cc20713fbea674dc",
   "panel-edges.js": "fb8a033735df9a4efa5b27eea236679294584f5d5c371e38ac1ec0e30afe22de",
   "public/annotations.json": "6caa30c6e3a9e660d224e6244c52de9dc982d7771f41c04ce64b305ac4df24bc",
@@ -46,8 +46,8 @@
   "tile-gradient.js": "eb7974a288a60359bd4c5e2bbd2b7a541d4dc618128e2833dc8dae06a3e7363b",
   "tile-presentation.js": "79154adc2ebc9cea0ad76b41f500d854920d554d18ee13c82fa1cb4e3d1ff471",
   "v1.html": "af6e908fb415500f3bd740012728f99d86ea81952849a63839bc8125348c6972",
-  "v2-app.js": "88c14d2d5ddaf41dc416b8988f47b99a4dd6bd45912c55cd459d310beaf03308",
+  "v2-app.js": "a08d250d20a9ff73f178c53f7cef14b819df960b45bff430596179984d6842d3",
   "v2-math.js": "b7874a9170cf6acab683573661a8e18d161fc6731579f8e2dbfdc681ae9b4b57",
   "v2.css": "3c3bb16312bfa327829aff04f77cc9791030812f869e7c7b094968bee9473cd2",
-  "v2.html": "e5282f2619dd153c5d85c3951f05c1bbdbb8ab0440183838cb9fc36d8f15e0ba"
+  "v2.html": "6ebebe794cfe3d7fa18a14a0cc4e04203bc5cc8fdac865bbf5b3799781036aa9"
 }
