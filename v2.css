@@ -348,7 +348,9 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border:0;border-radiu
  #space-controls .view-controls{min-height:76px;padding:8px;border-radius:16px}
  #space-controls .view-controls button{font-size:13px;padding:11px 7px;flex:1 1 68px}
  .layout-toolbar{display:flex;flex-direction:column;align-items:stretch;gap:11px;padding:13px;border-radius:17px}
- .layout-toolbar .tile-type-switch{width:100%;overflow-x:auto;flex-wrap:nowrap}.layout-toolbar .tile-type-switch button{flex:1 0 auto}
+ .layout-toolbar .tile-type-switch{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;overflow:hidden;flex-wrap:nowrap}
+ .layout-toolbar .tile-type-switch button{min-width:0;flex:none;padding:7px 2px;font-size:9px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .layout-toolbar .tile-type-switch button span{display:none}
  .layout-toolbar .surface-label{width:100%;font-size:13px}.layout-toolbar .surface-label select{flex:1;min-width:0;width:auto;font-size:13px}
  .layout-toolbar>#surface-spec{width:100%;font-size:12px;line-height:1.6}.layout-toolbar .drawing-controls{width:100%;margin-left:0;justify-content:flex-end}.layout-toolbar .drawing-controls label{margin-right:auto}
 }

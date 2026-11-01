@@ -1,18 +1,18 @@
-import {syncDisplayControls,isWallObject} from './display-controls.js?v=1.18';
-import {createSocketOutline} from './socket-outline.js?v=1.18';
-import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.18';
+import {syncDisplayControls,isWallObject} from './display-controls.js?v=1.19';
+import {createSocketOutline} from './socket-outline.js?v=1.19';
+import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.19';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.18';
-import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.18';
-import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.18';
-import {dedupeTopViewDimensions} from './scene-math.js?v=1.18';
-import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.18';
-import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.18';
-import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.18';
-import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.18';
-import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.18';
+import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.19';
+import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.19';
+import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.19';
+import {dedupeTopViewDimensions} from './scene-math.js?v=1.19';
+import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.19';
+import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.19';
+import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.19';
+import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.19';
+import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.19';
 
 const $=s=>document.querySelector(s), ns='http://www.w3.org/2000/svg';
 const isHostedRelease=document.documentElement.dataset.release==='github'||/(?:^|\.)github\.io$/i.test(location.hostname);
@@ -280,7 +280,7 @@ function frameCamera(){
     // Keep authored direction while adding enough distance for narrow phone canvases.
     const viewDirection=new THREE.Vector3(0,0,-1).applyQuaternion(cameraPreset.quaternion).normalize();
     const baseDistance=Math.max(cameraPreset.position.distanceTo(cameraPreset.target),.1);
-    let distance=baseDistance*(aspect<1?Math.min(2.4,Math.max(1.35,1.25/aspect)):1.06);
+    let distance=baseDistance*(aspect<1?.5:1.06);
     const fitPoints=[];
     for(const entry of meshEntries){
       if(!entry.mesh.visible)continue;
@@ -312,7 +312,7 @@ function frameCamera(){
   const target=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3()),dir=viewDirection();camera=state.view==='3d'?perspective:ortho;controls.object=camera;camera.zoom=1;
   camera.up.set(0,1,0);if(state.view==='top')camera.up.set(0,0,-1);
   if(camera.isPerspectiveCamera){camera.aspect=aspect;const right=new THREE.Vector3().crossVectors(camera.up,dir).normalize(),up=new THREE.Vector3().crossVectors(dir,right),tan=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));let distance=1;
-    for(const point of fitPoints){const v=point.clone().sub(target);distance=Math.max(distance,v.dot(dir)+Math.max(Math.abs(v.dot(up))/tan,Math.abs(v.dot(right))/(tan*aspect))*1.18);}
+    for(const point of fitPoints){const v=point.clone().sub(target);distance=Math.max(distance,v.dot(dir)+Math.max(Math.abs(v.dot(up))/tan,Math.abs(v.dot(right))/(tan*aspect))*1.19);}
     camera.position.copy(target).addScaledVector(dir,distance);
   }
   else{const horizontal=state.view==='top'?size.x:['left','right'].includes(state.direction)?size.z:size.x;const vertical=state.view==='top'?size.z:size.y;const half=Math.max(vertical/2,horizontal/(2*aspect))*(mobile.matches?1.42:1.25);camera.left=-half*aspect;camera.right=half*aspect;camera.top=half;camera.bottom=-half;camera.position.copy(target).addScaledVector(dir,size.length()+5);}
@@ -594,7 +594,7 @@ function setSection(section){
   $('#surface-select').hidden=section===3;
   $('.tile-type-switch').hidden=section!==3;
   document.querySelectorAll('button[data-section]').forEach(button=>{const active=Number(button.dataset.section)===section;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-  document.title=`O.家庭装修 V.1.18 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
+  document.title=`O.家庭装修 V.1.19 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
   $('#layout').hidden=section===2;document.querySelector('nav a[href="#layout"]').hidden=section===2;$('#original-cutting').hidden=section===2;
   if(section===3)selectFloor2TileType('1200');else if(section===1)selectSurface('floor');
   $('#layout-title').textContent=section===3?`二楼瓷砖铺贴平面图 · ${floor2TileLabel(state.floor2TileType)}`:'铺贴排版平面图';$('#layout .section-heading .eyebrow').textContent=section===3?'03 / 独立排版图':'02 / 独立排版图';
@@ -604,7 +604,7 @@ function setSection(section){
   $('#measurement-title').textContent=section===1?'硬装尺寸':section===2?'橱柜吊柜尺寸':'二楼尺寸';
   $('#measurements .section-description').textContent=section===3&&!data.floor2Dimensions?.length?'二楼集合中没有单独的尺寸标尺。':`以下为源工程中的${sectionLabel}标尺；点击一行在模型中高亮。顶视只显示 X、Y 方向且不小于 100 mm 的尺寸。`;
   $('#model-canvas').setAttribute('aria-label',section===1?'一楼硬装三维视图':section===2?'橱柜吊柜区与一楼硬装三维视图':'二楼模型三维视图');
-  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.18`;
+  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.19`;
   const url=new URL(location);if(section===1)url.searchParams.delete('section');else url.searchParams.set('section',section);history.replaceState(null,'',url);
   applyPresentation();renderModelLabels();renderRulerTable();frameCamera();updateThumbnail();
 }
