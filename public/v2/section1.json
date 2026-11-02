@@ -45774,6 +45774,16 @@
               -0.0052489
             ],
             [
+              -3.0983915,
+              1.7834095,
+              -0.0052489
+            ],
+            [
+              -3.0983915,
+              1.8210024,
+              -0.0052489
+            ],
+            [
               -3.6983917,
               1.8210024,
               -0.0052489
@@ -45801,6 +45811,14 @@
               1.7834095
             ],
             [
+              -3.0983915,
+              1.7834095
+            ],
+            [
+              -3.0983915,
+              1.8210024
+            ],
+            [
               -3.6983917,
               1.8210024
             ]
@@ -45812,20 +45830,24 @@
             644.89,
             172.52,
             517.52,
-            429.13,
+            172.52,
+            37.59,
+            600.0,
             1200.0
           ],
-          "areaM2": 0.616198,
+          "areaM2": 0.6307187,
           "rectangle": false,
           "oversize": false,
           "heightMmFromOrigin": -5.25,
           "surfaceId": "floor2-1200",
           "sourceFaceIds": [
             "F2-1200-019",
+            "F2-1200-046",
             "F2-1200-047"
           ],
           "sourceFaceIndices": [
             18,
+            45,
             46
           ],
           "fitWithinTolerance": false,
@@ -47581,76 +47603,6 @@
           "fitWithinTolerance": false,
           "packingToleranceMm": 0,
           "packingWidthMm": 27.39,
-          "packingHeightMm": 37.59,
-          "cuttingClass": "cut"
-        },
-        {
-          "id": "F2-1200-046",
-          "faceIndex": 45,
-          "sourceObject": "1200x600二楼地砖铺贴",
-          "materialIndex": 0,
-          "points": [
-            [
-              -3.6983917,
-              1.8210024,
-              -0.0052489
-            ],
-            [
-              -3.2709103,
-              1.7834095,
-              -0.0052489
-            ],
-            [
-              -3.0983915,
-              1.7834095,
-              -0.0052489
-            ],
-            [
-              -3.0983915,
-              1.8210024,
-              -0.0052489
-            ]
-          ],
-          "polygon": [
-            [
-              -3.6983917,
-              1.8210024
-            ],
-            [
-              -3.2709103,
-              1.7834095
-            ],
-            [
-              -3.0983915,
-              1.7834095
-            ],
-            [
-              -3.0983915,
-              1.8210024
-            ]
-          ],
-          "widthMm": 600.0,
-          "heightMm": 37.59,
-          "edgeLengthsMm": [
-            429.13,
-            172.52,
-            37.59,
-            600.0
-          ],
-          "areaM2": 0.0145206,
-          "rectangle": false,
-          "oversize": false,
-          "heightMmFromOrigin": -5.25,
-          "surfaceId": "floor2-1200",
-          "sourceFaceIds": [
-            "F2-1200-046"
-          ],
-          "sourceFaceIndices": [
-            45
-          ],
-          "fitWithinTolerance": false,
-          "packingToleranceMm": 0,
-          "packingWidthMm": 600.0,
           "packingHeightMm": 37.59,
           "cuttingClass": "cut"
         }
@@ -50430,7 +50382,8 @@
           "heightMmFromOrigin": -5.25,
           "surfaceId": "floor2-1200"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0
     },
     {
       "id": "floor2",
@@ -62675,7 +62628,8 @@
           "surfaceId": "floor2"
         }
       ],
-      "tileGroup": "800"
+      "tileGroup": "800",
+      "internalWiringDiagonalRatio": 0
     },
     {
       "id": "floor2-1500",
@@ -70236,7 +70190,8 @@
           "heightMmFromOrigin": 10.0,
           "surfaceId": "floor2-1500"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0
     }
   ],
   "floor2CuttingPlans": {
@@ -70246,12 +70201,12 @@
         600
       ],
       "stockAreaM2": 0.72,
-      "netAreaM2": 70.03498,
+      "netAreaM2": 70.03499,
       "fullTiles": 56,
       "theoreticalMinimumTiles": 98,
       "rawEstimatedStockTiles": 100,
       "estimatedStockTiles": 100,
-      "cutPieces": 107,
+      "cutPieces": 106,
       "stocks": [
         {
           "placements": [
@@ -70280,34 +70235,26 @@
               "rotated": false
             },
             {
-              "id": "F2-1200-046",
-              "x": 1100.1,
-              "y": 0,
-              "w": 37.59,
-              "h": 600.0,
-              "rotated": true
-            },
-            {
               "id": "F2-1200-038",
-              "x": 1137.69,
+              "x": 1100.1,
               "y": 0,
               "w": 27.39,
               "h": 517.52,
               "rotated": false
             },
             {
-              "id": "F2-1200-045",
-              "x": 1165.08,
+              "id": "W2-1200-089",
+              "x": 1127.49,
               "y": 0,
-              "w": 27.39,
-              "h": 37.59,
+              "w": 50.0,
+              "h": 183.17,
               "rotated": false
             }
           ],
           "w": 1200,
           "h": 600,
-          "usedAreaM2": 0.68782,
-          "wasteAreaM2": 0.03218
+          "usedAreaM2": 0.67339,
+          "wasteAreaM2": 0.04661
         },
         {
           "placements": [
@@ -71334,17 +71281,25 @@
               "w": 1200.0,
               "h": 50.0,
               "rotated": true
+            },
+            {
+              "id": "F2-1200-045",
+              "x": 1158.53,
+              "y": 0,
+              "w": 27.39,
+              "h": 37.59,
+              "rotated": false
             }
           ],
           "w": 1200,
           "h": 600,
-          "usedAreaM2": 0.69719,
-          "wasteAreaM2": 0.02281
+          "usedAreaM2": 0.69822,
+          "wasteAreaM2": 0.02178
         },
         {
           "placements": [
             {
-              "id": "W2-1200-045",
+              "id": "F2-1200-019",
               "x": 0,
               "y": 0,
               "w": 1200.0,
@@ -71360,7 +71315,7 @@
         {
           "placements": [
             {
-              "id": "F2-1200-019",
+              "id": "W2-1200-045",
               "x": 0,
               "y": 0,
               "w": 1200.0,
@@ -71446,20 +71401,12 @@
               "w": 1200.0,
               "h": 499.8,
               "rotated": true
-            },
-            {
-              "id": "W2-1200-089",
-              "x": 0,
-              "y": 499.8,
-              "w": 183.17,
-              "h": 50.0,
-              "rotated": true
             }
           ],
           "w": 1200,
           "h": 600,
-          "usedAreaM2": 0.60892,
-          "wasteAreaM2": 0.11108
+          "usedAreaM2": 0.59976,
+          "wasteAreaM2": 0.12024
         },
         {
           "placements": [
@@ -72375,7 +72322,7 @@
         "floor2-1200"
       ],
       "fullTilePieces": 56,
-      "cutTilePieces": 107
+      "cutTilePieces": 106
     },
     "800": {
       "stockMm": [
@@ -77259,7 +77206,7 @@
       "theoreticalMinimumTiles": 33,
       "rawEstimatedStockTiles": 36,
       "estimatedStockTiles": 36,
-      "cutPieces": 25,
+      "cutPieces": 24,
       "stocks": [
         {
           "placements": [
@@ -77632,18 +77579,18 @@
               "rotated": false
             },
             {
-              "id": "F2-1200-046",
+              "id": "F2-1200-038",
               "x": 1160.06,
               "y": 0,
-              "w": 37.59,
-              "h": 600.0,
-              "rotated": true
+              "w": 27.39,
+              "h": 517.52,
+              "rotated": false
             }
           ],
           "w": 1200,
           "h": 600,
-          "usedAreaM2": 0.70436,
-          "wasteAreaM2": 0.01564
+          "usedAreaM2": 0.69598,
+          "wasteAreaM2": 0.02402
         },
         {
           "placements": [
@@ -77656,16 +77603,8 @@
               "rotated": true
             },
             {
-              "id": "F2-1200-038",
-              "x": 987.54,
-              "y": 0,
-              "w": 27.39,
-              "h": 517.52,
-              "rotated": false
-            },
-            {
               "id": "F2-1200-045",
-              "x": 1014.93,
+              "x": 987.54,
               "y": 0,
               "w": 27.39,
               "h": 37.59,
@@ -77674,8 +77613,8 @@
           ],
           "w": 1200,
           "h": 600,
-          "usedAreaM2": 0.60773,
-          "wasteAreaM2": 0.11227
+          "usedAreaM2": 0.59355,
+          "wasteAreaM2": 0.12645
         },
         {
           "placements": [
@@ -77917,7 +77856,7 @@
         "floor2-1200"
       ],
       "fullTilePieces": 20,
-      "cutTilePieces": 25
+      "cutTilePieces": 24
     },
     "800": {
       "stockMm": [
@@ -91818,7 +91757,7 @@
       "theoreticalMinimumTiles": 33,
       "rawEstimatedStockTiles": 36,
       "estimatedStockTiles": 36,
-      "cutPieces": 25,
+      "cutPieces": 24,
       "stocks": [
         {
           "placements": [
@@ -92191,18 +92130,18 @@
               "rotated": false
             },
             {
-              "id": "F2-1200-046",
+              "id": "F2-1200-038",
               "x": 1160.06,
               "y": 0,
-              "w": 37.59,
-              "h": 600.0,
-              "rotated": true
+              "w": 27.39,
+              "h": 517.52,
+              "rotated": false
             }
           ],
           "w": 1200,
           "h": 600,
-          "usedAreaM2": 0.70436,
-          "wasteAreaM2": 0.01564
+          "usedAreaM2": 0.69598,
+          "wasteAreaM2": 0.02402
         },
         {
           "placements": [
@@ -92215,16 +92154,8 @@
               "rotated": true
             },
             {
-              "id": "F2-1200-038",
-              "x": 987.54,
-              "y": 0,
-              "w": 27.39,
-              "h": 517.52,
-              "rotated": false
-            },
-            {
               "id": "F2-1200-045",
-              "x": 1014.93,
+              "x": 987.54,
               "y": 0,
               "w": 27.39,
               "h": 37.59,
@@ -92233,8 +92164,8 @@
           ],
           "w": 1200,
           "h": 600,
-          "usedAreaM2": 0.60773,
-          "wasteAreaM2": 0.11227
+          "usedAreaM2": 0.59355,
+          "wasteAreaM2": 0.12645
         },
         {
           "placements": [
