@@ -2,9 +2,9 @@
   "version": "2.0",
   "section": "板块一",
   "source": "K:\\家装修\\厨房+二楼装修_v2.blend",
-  "sourceModifiedAt": "2026-11-01T22:24:15.158776+08:00",
-  "sourceSha256": "870fec06eb2386c8bc83b85e998403865b1e6f14ae628cd799aff5a0f0db4197",
-  "exportedAt": "2026-11-01T23:04:48.157540+08:00",
+  "sourceModifiedAt": "2026-11-02T00:41:33.893505+08:00",
+  "sourceSha256": "c528a311bbcd56c5d69009bdbe4c30ed3fa4e76e5ab0948ff52a5c1b17c2ec95",
+  "exportedAt": "2026-11-02T08:24:06.478026+08:00",
   "unit": "m",
   "displayUnit": "mm",
   "unitScale": 1.0,
@@ -1992,7 +1992,8 @@
           "heightMmFromOrigin": 2641.47,
           "surfaceId": "W2-1200-wall-01"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-3.061:-1",
@@ -4725,7 +4726,8 @@
           "heightMmFromOrigin": 239.05,
           "surfaceId": "W2-1200-wall-02"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-3.260:-1",
@@ -5135,7 +5137,8 @@
           "heightMmFromOrigin": 2641.47,
           "surfaceId": "W2-1200-wall-03"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-4.411:-1",
@@ -6013,7 +6016,8 @@
           "heightMmFromOrigin": 1786.74,
           "surfaceId": "W2-1200-wall-04"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-6.710:1",
@@ -9132,7 +9136,8 @@
           "heightMmFromOrigin": 241.47,
           "surfaceId": "W2-1200-wall-05"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:-2.775:1",
@@ -10318,7 +10323,8 @@
           "heightMmFromOrigin": 241.47,
           "surfaceId": "W2-1200-wall-06"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:-3.875:1",
@@ -12425,7 +12431,8 @@
           "heightMmFromOrigin": 2641.47,
           "surfaceId": "W2-1200-wall-07"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:1.275:-1",
@@ -12835,7 +12842,8 @@
           "heightMmFromOrigin": 241.47,
           "surfaceId": "W2-1200-wall-08"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:1.775:1",
@@ -13374,7 +13382,8 @@
           "heightMmFromOrigin": 2641.47,
           "surfaceId": "W2-1200-wall-09"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:2.775:-1",
@@ -16675,7 +16684,8 @@
           "heightMmFromOrigin": 1441.47,
           "surfaceId": "W2-1200-wall-10"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-3.061:-1",
@@ -19800,7 +19810,8 @@
           "heightMmFromOrigin": 241.42,
           "surfaceId": "W2-800-wall-01"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-3.071:-1",
@@ -21115,7 +21126,8 @@
           "heightMmFromOrigin": 1036.62,
           "surfaceId": "W2-800-wall-02"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-3.260:-1",
@@ -21656,7 +21668,8 @@
           "heightMmFromOrigin": 1036.62,
           "surfaceId": "W2-800-wall-03"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-4.411:-1",
@@ -22712,7 +22725,8 @@
           "heightMmFromOrigin": 2641.47,
           "surfaceId": "W2-800-wall-04"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-6.710:1",
@@ -26496,7 +26510,8 @@
           "heightMmFromOrigin": 241.47,
           "surfaceId": "W2-800-wall-05"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:-2.775:1",
@@ -27554,7 +27569,8 @@
           "heightMmFromOrigin": 241.47,
           "surfaceId": "W2-800-wall-06"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:-3.875:1",
@@ -29515,7 +29531,8 @@
           "heightMmFromOrigin": 2641.47,
           "surfaceId": "W2-800-wall-07"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:1.275:-1",
@@ -30056,7 +30073,8 @@
           "heightMmFromOrigin": 1036.62,
           "surfaceId": "W2-800-wall-08"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:1.775:1",
@@ -30726,7 +30744,8 @@
           "heightMmFromOrigin": 2641.87,
           "surfaceId": "W2-800-wall-09"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:2.775:-1",
@@ -33587,7 +33606,8 @@
           "heightMmFromOrigin": 3000.0,
           "surfaceId": "W2-800-wall-10"
         }
-      ]
+      ],
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-3.060:-1",
@@ -34126,7 +34146,8 @@
         }
       ],
       "areaM2": 2.9417,
-      "tileGroup": "1500"
+      "tileGroup": "1500",
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-3.061:-1",
@@ -35701,7 +35722,8 @@
         }
       ],
       "areaM2": 10.46185,
-      "tileGroup": "1500"
+      "tileGroup": "1500",
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-3.260:-1",
@@ -36240,7 +36262,8 @@
         }
       ],
       "areaM2": 1.29159,
-      "tileGroup": "1500"
+      "tileGroup": "1500",
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-4.411:-1",
@@ -37315,7 +37338,8 @@
         }
       ],
       "areaM2": 1.91603,
-      "tileGroup": "1500"
+      "tileGroup": "1500",
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "0:-6.710:1",
@@ -39483,7 +39507,8 @@
         }
       ],
       "areaM2": 12.35069,
-      "tileGroup": "1500"
+      "tileGroup": "1500",
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:-2.775:1",
@@ -40022,7 +40047,8 @@
         }
       ],
       "areaM2": 3.48728,
-      "tileGroup": "1500"
+      "tileGroup": "1500",
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:-3.875:1",
@@ -41593,7 +41619,8 @@
         }
       ],
       "areaM2": 6.76534,
-      "tileGroup": "1500"
+      "tileGroup": "1500",
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:1.275:-1",
@@ -42132,7 +42159,8 @@
         }
       ],
       "areaM2": 0.51628,
-      "tileGroup": "1500"
+      "tileGroup": "1500",
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:1.775:1",
@@ -42671,7 +42699,8 @@
         }
       ],
       "areaM2": 0.51659,
-      "tileGroup": "1500"
+      "tileGroup": "1500",
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "key": "1:2.775:-1",
@@ -44437,7 +44466,8 @@
         }
       ],
       "areaM2": 6.25722,
-      "tileGroup": "1500"
+      "tileGroup": "1500",
+      "internalWiringDiagonalRatio": 0.1
     },
     {
       "id": "floor2-1200",
@@ -45842,13 +45872,13 @@
           "surfaceId": "floor2-1200",
           "sourceFaceIds": [
             "F2-1200-019",
-            "F2-1200-046",
-            "F2-1200-047"
+            "F2-1200-044",
+            "F2-1200-045"
           ],
           "sourceFaceIndices": [
             18,
-            45,
-            46
+            43,
+            44
           ],
           "fitWithinTolerance": false,
           "packingToleranceMm": 0,
@@ -47053,146 +47083,6 @@
           "materialIndex": 0,
           "points": [
             [
-              -3.0983915,
-              1.7834095,
-              -0.0052489
-            ],
-            [
-              -3.0983915,
-              1.2658905,
-              -0.0052489
-            ],
-            [
-              -3.0710015,
-              1.2658905,
-              -0.0052489
-            ],
-            [
-              -3.0710015,
-              1.7834095,
-              -0.0052489
-            ]
-          ],
-          "polygon": [
-            [
-              -3.0983915,
-              1.7834095
-            ],
-            [
-              -3.0983915,
-              1.2658905
-            ],
-            [
-              -3.0710015,
-              1.2658905
-            ],
-            [
-              -3.0710015,
-              1.7834095
-            ]
-          ],
-          "widthMm": 27.39,
-          "heightMm": 517.52,
-          "edgeLengthsMm": [
-            517.52,
-            27.39,
-            517.52,
-            27.39
-          ],
-          "areaM2": 0.0141748,
-          "rectangle": true,
-          "oversize": false,
-          "heightMmFromOrigin": -5.25,
-          "surfaceId": "floor2-1200",
-          "sourceFaceIds": [
-            "F2-1200-038"
-          ],
-          "sourceFaceIndices": [
-            37
-          ],
-          "fitWithinTolerance": false,
-          "packingToleranceMm": 0,
-          "packingWidthMm": 27.39,
-          "packingHeightMm": 517.52,
-          "cuttingClass": "cut"
-        },
-        {
-          "id": "F2-1200-039",
-          "faceIndex": 38,
-          "sourceObject": "1200x600二楼地砖铺贴",
-          "materialIndex": 0,
-          "points": [
-            [
-              -3.2709103,
-              1.7834095,
-              -0.0052489
-            ],
-            [
-              -3.2709103,
-              1.2658905,
-              -0.0052489
-            ],
-            [
-              -3.0983915,
-              1.2658905,
-              -0.0052489
-            ],
-            [
-              -3.0983915,
-              1.7834095,
-              -0.0052489
-            ]
-          ],
-          "polygon": [
-            [
-              -3.2709103,
-              1.7834095
-            ],
-            [
-              -3.2709103,
-              1.2658905
-            ],
-            [
-              -3.0983915,
-              1.2658905
-            ],
-            [
-              -3.0983915,
-              1.7834095
-            ]
-          ],
-          "widthMm": 172.52,
-          "heightMm": 517.52,
-          "edgeLengthsMm": [
-            517.52,
-            172.52,
-            517.52,
-            172.52
-          ],
-          "areaM2": 0.0892817,
-          "rectangle": true,
-          "oversize": false,
-          "heightMmFromOrigin": -5.25,
-          "surfaceId": "floor2-1200",
-          "sourceFaceIds": [
-            "F2-1200-039"
-          ],
-          "sourceFaceIndices": [
-            38
-          ],
-          "fitWithinTolerance": false,
-          "packingToleranceMm": 0,
-          "packingWidthMm": 172.52,
-          "packingHeightMm": 517.52,
-          "cuttingClass": "cut"
-        },
-        {
-          "id": "F2-1200-040",
-          "faceIndex": 39,
-          "sourceObject": "1200x600二楼地砖铺贴",
-          "materialIndex": 0,
-          "points": [
-            [
               -6.098393,
               1.8210015,
               -0.0052489
@@ -47245,10 +47135,10 @@
           "heightMmFromOrigin": -5.25,
           "surfaceId": "floor2-1200",
           "sourceFaceIds": [
-            "F2-1200-040"
+            "F2-1200-038"
           ],
           "sourceFaceIndices": [
-            39
+            37
           ],
           "fitWithinTolerance": false,
           "packingToleranceMm": 0,
@@ -47257,8 +47147,8 @@
           "cuttingClass": "full"
         },
         {
-          "id": "F2-1200-041",
-          "faceIndex": 40,
+          "id": "F2-1200-039",
+          "faceIndex": 38,
           "sourceObject": "1200x600二楼地砖铺贴",
           "materialIndex": 0,
           "points": [
@@ -47315,10 +47205,10 @@
           "heightMmFromOrigin": -5.25,
           "surfaceId": "floor2-1200",
           "sourceFaceIds": [
-            "F2-1200-041"
+            "F2-1200-039"
           ],
           "sourceFaceIndices": [
-            40
+            38
           ],
           "fitWithinTolerance": false,
           "packingToleranceMm": 0,
@@ -47327,8 +47217,8 @@
           "cuttingClass": "full"
         },
         {
-          "id": "F2-1200-042",
-          "faceIndex": 41,
+          "id": "F2-1200-040",
+          "faceIndex": 39,
           "sourceObject": "1200x600二楼地砖铺贴",
           "materialIndex": 0,
           "points": [
@@ -47385,10 +47275,10 @@
           "heightMmFromOrigin": -5.25,
           "surfaceId": "floor2-1200",
           "sourceFaceIds": [
-            "F2-1200-042"
+            "F2-1200-040"
           ],
           "sourceFaceIndices": [
-            41
+            39
           ],
           "fitWithinTolerance": false,
           "packingToleranceMm": 0,
@@ -47397,8 +47287,8 @@
           "cuttingClass": "full"
         },
         {
-          "id": "F2-1200-043",
-          "faceIndex": 42,
+          "id": "F2-1200-041",
+          "faceIndex": 40,
           "sourceObject": "1200x600二楼地砖铺贴",
           "materialIndex": 0,
           "points": [
@@ -47455,10 +47345,10 @@
           "heightMmFromOrigin": -5.25,
           "surfaceId": "floor2-1200",
           "sourceFaceIds": [
-            "F2-1200-043"
+            "F2-1200-041"
           ],
           "sourceFaceIndices": [
-            42
+            40
           ],
           "fitWithinTolerance": false,
           "packingToleranceMm": 0,
@@ -47467,8 +47357,8 @@
           "cuttingClass": "full"
         },
         {
-          "id": "F2-1200-044",
-          "faceIndex": 43,
+          "id": "F2-1200-042",
+          "faceIndex": 41,
           "sourceObject": "1200x600二楼地砖铺贴",
           "materialIndex": 0,
           "points": [
@@ -47525,10 +47415,10 @@
           "heightMmFromOrigin": -5.25,
           "surfaceId": "floor2-1200",
           "sourceFaceIds": [
-            "F2-1200-044"
+            "F2-1200-042"
           ],
           "sourceFaceIndices": [
-            43
+            41
           ],
           "fitWithinTolerance": false,
           "packingToleranceMm": 0,
@@ -47537,8 +47427,8 @@
           "cuttingClass": "cut"
         },
         {
-          "id": "F2-1200-045",
-          "faceIndex": 44,
+          "id": "F2-1200-043",
+          "faceIndex": 42,
           "sourceObject": "1200x600二楼地砖铺贴",
           "materialIndex": 0,
           "points": [
@@ -47595,10 +47485,10 @@
           "heightMmFromOrigin": -5.25,
           "surfaceId": "floor2-1200",
           "sourceFaceIds": [
-            "F2-1200-045"
+            "F2-1200-043"
           ],
           "sourceFaceIndices": [
-            44
+            42
           ],
           "fitWithinTolerance": false,
           "packingToleranceMm": 0,
@@ -47607,7 +47497,7 @@
           "cuttingClass": "cut"
         }
       ],
-      "areaM2": 23.53695,
+      "areaM2": 23.4335,
       "sourceFaces": [
         {
           "id": "F2-1200-001",
@@ -49799,124 +49689,6 @@
           "materialIndex": 0,
           "points": [
             [
-              -3.0983915,
-              1.7834095,
-              -0.0052489
-            ],
-            [
-              -3.0983915,
-              1.2658905,
-              -0.0052489
-            ],
-            [
-              -3.0710015,
-              1.2658905,
-              -0.0052489
-            ],
-            [
-              -3.0710015,
-              1.7834095,
-              -0.0052489
-            ]
-          ],
-          "polygon": [
-            [
-              -3.0983915,
-              1.7834095
-            ],
-            [
-              -3.0983915,
-              1.2658905
-            ],
-            [
-              -3.0710015,
-              1.2658905
-            ],
-            [
-              -3.0710015,
-              1.7834095
-            ]
-          ],
-          "widthMm": 27.39,
-          "heightMm": 517.52,
-          "edgeLengthsMm": [
-            517.52,
-            27.39,
-            517.52,
-            27.39
-          ],
-          "areaM2": 0.0141748,
-          "rectangle": true,
-          "oversize": false,
-          "heightMmFromOrigin": -5.25,
-          "surfaceId": "floor2-1200"
-        },
-        {
-          "id": "F2-1200-039",
-          "faceIndex": 38,
-          "sourceObject": "1200x600二楼地砖铺贴",
-          "materialIndex": 0,
-          "points": [
-            [
-              -3.2709103,
-              1.7834095,
-              -0.0052489
-            ],
-            [
-              -3.2709103,
-              1.2658905,
-              -0.0052489
-            ],
-            [
-              -3.0983915,
-              1.2658905,
-              -0.0052489
-            ],
-            [
-              -3.0983915,
-              1.7834095,
-              -0.0052489
-            ]
-          ],
-          "polygon": [
-            [
-              -3.2709103,
-              1.7834095
-            ],
-            [
-              -3.2709103,
-              1.2658905
-            ],
-            [
-              -3.0983915,
-              1.2658905
-            ],
-            [
-              -3.0983915,
-              1.7834095
-            ]
-          ],
-          "widthMm": 172.52,
-          "heightMm": 517.52,
-          "edgeLengthsMm": [
-            517.52,
-            172.52,
-            517.52,
-            172.52
-          ],
-          "areaM2": 0.0892817,
-          "rectangle": true,
-          "oversize": false,
-          "heightMmFromOrigin": -5.25,
-          "surfaceId": "floor2-1200"
-        },
-        {
-          "id": "F2-1200-040",
-          "faceIndex": 39,
-          "sourceObject": "1200x600二楼地砖铺贴",
-          "materialIndex": 0,
-          "points": [
-            [
               -6.098393,
               1.8210015,
               -0.0052489
@@ -49970,8 +49742,8 @@
           "surfaceId": "floor2-1200"
         },
         {
-          "id": "F2-1200-041",
-          "faceIndex": 40,
+          "id": "F2-1200-039",
+          "faceIndex": 38,
           "sourceObject": "1200x600二楼地砖铺贴",
           "materialIndex": 0,
           "points": [
@@ -50029,8 +49801,8 @@
           "surfaceId": "floor2-1200"
         },
         {
-          "id": "F2-1200-042",
-          "faceIndex": 41,
+          "id": "F2-1200-040",
+          "faceIndex": 39,
           "sourceObject": "1200x600二楼地砖铺贴",
           "materialIndex": 0,
           "points": [
@@ -50088,8 +49860,8 @@
           "surfaceId": "floor2-1200"
         },
         {
-          "id": "F2-1200-043",
-          "faceIndex": 42,
+          "id": "F2-1200-041",
+          "faceIndex": 40,
           "sourceObject": "1200x600二楼地砖铺贴",
           "materialIndex": 0,
           "points": [
@@ -50147,8 +49919,8 @@
           "surfaceId": "floor2-1200"
         },
         {
-          "id": "F2-1200-044",
-          "faceIndex": 43,
+          "id": "F2-1200-042",
+          "faceIndex": 41,
           "sourceObject": "1200x600二楼地砖铺贴",
           "materialIndex": 0,
           "points": [
@@ -50206,8 +49978,8 @@
           "surfaceId": "floor2-1200"
         },
         {
-          "id": "F2-1200-045",
-          "faceIndex": 44,
+          "id": "F2-1200-043",
+          "faceIndex": 42,
           "sourceObject": "1200x600二楼地砖铺贴",
           "materialIndex": 0,
           "points": [
@@ -50265,8 +50037,8 @@
           "surfaceId": "floor2-1200"
         },
         {
-          "id": "F2-1200-046",
-          "faceIndex": 45,
+          "id": "F2-1200-044",
+          "faceIndex": 43,
           "sourceObject": "1200x600二楼地砖铺贴",
           "materialIndex": 0,
           "points": [
@@ -50324,8 +50096,8 @@
           "surfaceId": "floor2-1200"
         },
         {
-          "id": "F2-1200-047",
-          "faceIndex": 46,
+          "id": "F2-1200-045",
+          "faceIndex": 44,
           "sourceObject": "1200x600二楼地砖铺贴",
           "materialIndex": 0,
           "points": [
@@ -70201,12 +69973,12 @@
         600
       ],
       "stockAreaM2": 0.72,
-      "netAreaM2": 70.03499,
+      "netAreaM2": 69.93153,
       "fullTiles": 56,
       "theoreticalMinimumTiles": 98,
       "rawEstimatedStockTiles": 100,
       "estimatedStockTiles": 100,
-      "cutPieces": 106,
+      "cutPieces": 104,
       "stocks": [
         {
           "placements": [
@@ -70235,26 +70007,26 @@
               "rotated": false
             },
             {
-              "id": "F2-1200-038",
-              "x": 1100.1,
-              "y": 0,
-              "w": 27.39,
-              "h": 517.52,
-              "rotated": false
-            },
-            {
               "id": "W2-1200-089",
-              "x": 1127.49,
+              "x": 1100.1,
               "y": 0,
               "w": 50.0,
               "h": 183.17,
+              "rotated": false
+            },
+            {
+              "id": "F2-1200-043",
+              "x": 1150.1,
+              "y": 0,
+              "w": 27.39,
+              "h": 37.59,
               "rotated": false
             }
           ],
           "w": 1200,
           "h": 600,
-          "usedAreaM2": 0.67339,
-          "wasteAreaM2": 0.04661
+          "usedAreaM2": 0.66025,
+          "wasteAreaM2": 0.05975
         },
         {
           "placements": [
@@ -70355,7 +70127,7 @@
         {
           "placements": [
             {
-              "id": "F2-1200-042",
+              "id": "F2-1200-040",
               "x": 0,
               "y": 0,
               "w": 1200.0,
@@ -70787,7 +70559,7 @@
         {
           "placements": [
             {
-              "id": "F2-1200-043",
+              "id": "F2-1200-041",
               "x": 0,
               "y": 0,
               "w": 1200.0,
@@ -70803,7 +70575,7 @@
         {
           "placements": [
             {
-              "id": "F2-1200-040",
+              "id": "F2-1200-038",
               "x": 0,
               "y": 0,
               "w": 1200.0,
@@ -71171,7 +70943,7 @@
         {
           "placements": [
             {
-              "id": "F2-1200-041",
+              "id": "F2-1200-039",
               "x": 0,
               "y": 0,
               "w": 1200.0,
@@ -71281,20 +71053,12 @@
               "w": 1200.0,
               "h": 50.0,
               "rotated": true
-            },
-            {
-              "id": "F2-1200-045",
-              "x": 1158.53,
-              "y": 0,
-              "w": 27.39,
-              "h": 37.59,
-              "rotated": false
             }
           ],
           "w": 1200,
           "h": 600,
-          "usedAreaM2": 0.69822,
-          "wasteAreaM2": 0.02178
+          "usedAreaM2": 0.69719,
+          "wasteAreaM2": 0.02281
         },
         {
           "placements": [
@@ -71595,7 +71359,7 @@
         {
           "placements": [
             {
-              "id": "F2-1200-044",
+              "id": "F2-1200-042",
               "x": 0,
               "y": 0,
               "w": 962.46,
@@ -72275,25 +72039,17 @@
               "rotated": false
             },
             {
-              "id": "F2-1200-039",
+              "id": "W2-1200-085",
               "x": 499.8,
               "y": 0,
-              "w": 517.52,
-              "h": 172.52,
-              "rotated": true
-            },
-            {
-              "id": "W2-1200-085",
-              "x": 0,
-              "y": 183.17,
               "w": 400.0,
               "h": 183.17,
               "rotated": false
             },
             {
               "id": "W2-1200-075",
-              "x": 400.0,
-              "y": 183.17,
+              "x": 899.8,
+              "y": 0,
               "w": 199.89,
               "h": 183.17,
               "rotated": false
@@ -72301,8 +72057,8 @@
           ],
           "w": 1200,
           "h": 600,
-          "usedAreaM2": 0.29071,
-          "wasteAreaM2": 0.42929
+          "usedAreaM2": 0.20143,
+          "wasteAreaM2": 0.51857
         }
       ],
       "unplaced": [],
@@ -72322,7 +72078,7 @@
         "floor2-1200"
       ],
       "fullTilePieces": 56,
-      "cutTilePieces": 106
+      "cutTilePieces": 104
     },
     "800": {
       "stockMm": [
@@ -77201,17 +76957,17 @@
         600
       ],
       "stockAreaM2": 0.72,
-      "netAreaM2": 23.53695,
+      "netAreaM2": 23.4335,
       "fullTiles": 20,
       "theoreticalMinimumTiles": 33,
       "rawEstimatedStockTiles": 36,
       "estimatedStockTiles": 36,
-      "cutPieces": 24,
+      "cutPieces": 22,
       "stocks": [
         {
           "placements": [
             {
-              "id": "F2-1200-042",
+              "id": "F2-1200-040",
               "x": 0,
               "y": 0,
               "w": 1200.0,
@@ -77339,7 +77095,7 @@
         {
           "placements": [
             {
-              "id": "F2-1200-043",
+              "id": "F2-1200-041",
               "x": 0,
               "y": 0,
               "w": 1200.0,
@@ -77355,7 +77111,7 @@
         {
           "placements": [
             {
-              "id": "F2-1200-040",
+              "id": "F2-1200-038",
               "x": 0,
               "y": 0,
               "w": 1200.0,
@@ -77515,7 +77271,7 @@
         {
           "placements": [
             {
-              "id": "F2-1200-041",
+              "id": "F2-1200-039",
               "x": 0,
               "y": 0,
               "w": 1200.0,
@@ -77571,39 +77327,7 @@
               "rotated": true
             },
             {
-              "id": "F2-1200-039",
-              "x": 987.54,
-              "y": 0,
-              "w": 172.52,
-              "h": 517.52,
-              "rotated": false
-            },
-            {
-              "id": "F2-1200-038",
-              "x": 1160.06,
-              "y": 0,
-              "w": 27.39,
-              "h": 517.52,
-              "rotated": false
-            }
-          ],
-          "w": 1200,
-          "h": 600,
-          "usedAreaM2": 0.69598,
-          "wasteAreaM2": 0.02402
-        },
-        {
-          "placements": [
-            {
-              "id": "F2-1200-017",
-              "x": 0,
-              "y": 0,
-              "w": 987.54,
-              "h": 600.0,
-              "rotated": true
-            },
-            {
-              "id": "F2-1200-045",
+              "id": "F2-1200-043",
               "x": 987.54,
               "y": 0,
               "w": 27.39,
@@ -77615,6 +77339,22 @@
           "h": 600,
           "usedAreaM2": 0.59355,
           "wasteAreaM2": 0.12645
+        },
+        {
+          "placements": [
+            {
+              "id": "F2-1200-017",
+              "x": 0,
+              "y": 0,
+              "w": 987.54,
+              "h": 600.0,
+              "rotated": true
+            }
+          ],
+          "w": 1200,
+          "h": 600,
+          "usedAreaM2": 0.59252,
+          "wasteAreaM2": 0.12748
         },
         {
           "placements": [
@@ -77699,7 +77439,7 @@
         {
           "placements": [
             {
-              "id": "F2-1200-044",
+              "id": "F2-1200-042",
               "x": 0,
               "y": 0,
               "w": 962.46,
@@ -77856,7 +77596,7 @@
         "floor2-1200"
       ],
       "fullTilePieces": 20,
-      "cutTilePieces": 24
+      "cutTilePieces": 22
     },
     "800": {
       "stockMm": [
@@ -91752,17 +91492,17 @@
         600
       ],
       "stockAreaM2": 0.72,
-      "netAreaM2": 23.53695,
+      "netAreaM2": 23.4335,
       "fullTiles": 20,
       "theoreticalMinimumTiles": 33,
       "rawEstimatedStockTiles": 36,
       "estimatedStockTiles": 36,
-      "cutPieces": 24,
+      "cutPieces": 22,
       "stocks": [
         {
           "placements": [
             {
-              "id": "F2-1200-042",
+              "id": "F2-1200-040",
               "x": 0,
               "y": 0,
               "w": 1200.0,
@@ -91890,7 +91630,7 @@
         {
           "placements": [
             {
-              "id": "F2-1200-043",
+              "id": "F2-1200-041",
               "x": 0,
               "y": 0,
               "w": 1200.0,
@@ -91906,7 +91646,7 @@
         {
           "placements": [
             {
-              "id": "F2-1200-040",
+              "id": "F2-1200-038",
               "x": 0,
               "y": 0,
               "w": 1200.0,
@@ -92066,7 +91806,7 @@
         {
           "placements": [
             {
-              "id": "F2-1200-041",
+              "id": "F2-1200-039",
               "x": 0,
               "y": 0,
               "w": 1200.0,
@@ -92122,39 +91862,7 @@
               "rotated": true
             },
             {
-              "id": "F2-1200-039",
-              "x": 987.54,
-              "y": 0,
-              "w": 172.52,
-              "h": 517.52,
-              "rotated": false
-            },
-            {
-              "id": "F2-1200-038",
-              "x": 1160.06,
-              "y": 0,
-              "w": 27.39,
-              "h": 517.52,
-              "rotated": false
-            }
-          ],
-          "w": 1200,
-          "h": 600,
-          "usedAreaM2": 0.69598,
-          "wasteAreaM2": 0.02402
-        },
-        {
-          "placements": [
-            {
-              "id": "F2-1200-017",
-              "x": 0,
-              "y": 0,
-              "w": 987.54,
-              "h": 600.0,
-              "rotated": true
-            },
-            {
-              "id": "F2-1200-045",
+              "id": "F2-1200-043",
               "x": 987.54,
               "y": 0,
               "w": 27.39,
@@ -92166,6 +91874,22 @@
           "h": 600,
           "usedAreaM2": 0.59355,
           "wasteAreaM2": 0.12645
+        },
+        {
+          "placements": [
+            {
+              "id": "F2-1200-017",
+              "x": 0,
+              "y": 0,
+              "w": 987.54,
+              "h": 600.0,
+              "rotated": true
+            }
+          ],
+          "w": 1200,
+          "h": 600,
+          "usedAreaM2": 0.59252,
+          "wasteAreaM2": 0.12748
         },
         {
           "placements": [
@@ -92250,7 +91974,7 @@
         {
           "placements": [
             {
-              "id": "F2-1200-044",
+              "id": "F2-1200-042",
               "x": 0,
               "y": 0,
               "w": 962.46,
@@ -94663,9 +94387,9 @@
     }
   },
   "modelFile": "section1.glb",
-  "modelFileSizeBytes": 12341180,
+  "modelFileSizeBytes": 12341156,
   "modelCompressedFile": "section1.glb.gz",
-  "modelDownloadSizeBytes": 7067291,
+  "modelDownloadSizeBytes": 7067230,
   "dimensions": [
     {
       "id": "硬装尺寸.001「固定尺寸」",
@@ -98151,8 +97875,8 @@
           "sourceFaceIndices": [
             51
           ],
-          "surfaceId": "floor",
           "specialHandling": "按用户要求特殊处理；保留源模型尺寸，不纳入普通备料统计。",
+          "surfaceId": "floor",
           "cuttingClass": "review"
         },
         {
@@ -102562,12 +102286,12 @@
           "heightMmFromOrigin": -700.0
         }
       ],
+      "internalWiringDiagonalRatio": 0,
       "id": "floor",
       "name": "地面铺贴平面图",
       "areaM2": 26.63115,
       "flipX": true,
-      "flipY": true,
-      "internalWiringDiagonalRatio": 0
+      "flipY": true
     },
     {
       "key": "ceiling",
@@ -106927,12 +106651,12 @@
           "heightMmFromOrigin": 1610.0
         }
       ],
+      "internalWiringDiagonalRatio": 0.1,
       "id": "ceiling",
       "name": "厨房吊顶排版平面图",
       "areaM2": 5.2,
       "flipX": true,
-      "flipY": true,
-      "internalWiringDiagonalRatio": 0.1
+      "flipY": true
     },
     {
       "key": "0:-1.265:1",
@@ -107572,12 +107296,12 @@
           "heightMmFromOrigin": null
         }
       ],
+      "internalWiringDiagonalRatio": 0.1,
       "id": "wall-01",
       "name": "墙面 / 竖向面 01",
       "areaM2": 1.21917,
       "flipX": true,
-      "flipY": true,
-      "internalWiringDiagonalRatio": 0.1
+      "flipY": true
     },
     {
       "key": "0:-1.515:1",
@@ -107721,12 +107445,12 @@
           "heightMmFromOrigin": null
         }
       ],
+      "internalWiringDiagonalRatio": 0.1,
       "id": "wall-02",
       "name": "墙面 / 竖向面 02",
       "areaM2": 0.09,
       "flipX": true,
-      "flipY": true,
-      "internalWiringDiagonalRatio": 0.1
+      "flipY": true
     },
     {
       "key": "0:-1.965:-1",
@@ -108862,12 +108586,12 @@
           "heightMmFromOrigin": null
         }
       ],
+      "internalWiringDiagonalRatio": 0.1,
       "id": "wall-03",
       "name": "墙面 / 竖向面 03",
       "areaM2": 4.64753,
       "flipX": true,
-      "flipY": true,
-      "internalWiringDiagonalRatio": 0.1
+      "flipY": true
     },
     {
       "key": "0:0.435:-1",
@@ -109259,12 +108983,12 @@
           "heightMmFromOrigin": null
         }
       ],
+      "internalWiringDiagonalRatio": 0.1,
       "id": "wall-04",
       "name": "墙面 / 竖向面 04",
       "areaM2": 0.38,
       "flipX": true,
-      "flipY": true,
-      "internalWiringDiagonalRatio": 0.1
+      "flipY": true
     },
     {
       "key": "0:0.635:-1",
@@ -110028,12 +109752,12 @@
           "heightMmFromOrigin": null
         }
       ],
+      "internalWiringDiagonalRatio": 0.1,
       "id": "wall-05",
       "name": "墙面 / 竖向面 05",
       "areaM2": 2.66001,
       "flipX": true,
-      "flipY": true,
-      "internalWiringDiagonalRatio": 0.1
+      "flipY": true
     },
     {
       "key": "0:0.635:1",
@@ -111169,12 +110893,12 @@
           "heightMmFromOrigin": null
         }
       ],
+      "internalWiringDiagonalRatio": 0.1,
       "id": "wall-06",
       "name": "墙面 / 竖向面 06",
       "areaM2": 2.96753,
       "flipX": true,
-      "flipY": true,
-      "internalWiringDiagonalRatio": 0.1
+      "flipY": true
     },
     {
       "key": "1:-6.089:1",
@@ -112514,12 +112238,12 @@
           "heightMmFromOrigin": null
         }
       ],
+      "internalWiringDiagonalRatio": 0.1,
       "id": "wall-07",
       "name": "墙面 / 竖向面 07",
       "areaM2": 4.14179,
       "flipX": true,
-      "flipY": true,
-      "internalWiringDiagonalRatio": 0.1
+      "flipY": true
     },
     {
       "key": "1:-8.089:-1",
@@ -114027,12 +113751,12 @@
           "heightMmFromOrigin": null
         }
       ],
+      "internalWiringDiagonalRatio": 0.1,
       "id": "wall-08",
       "name": "墙面 / 竖向面 08",
       "areaM2": 6.04178,
       "flipX": true,
-      "flipY": true,
-      "internalWiringDiagonalRatio": 0.1
+      "flipY": true
     },
     {
       "key": "1:-8.289:-1",
@@ -115168,12 +114892,12 @@
           "heightMmFromOrigin": null
         }
       ],
+      "internalWiringDiagonalRatio": 0.1,
       "id": "wall-09",
       "name": "墙面 / 竖向面 09",
       "areaM2": 3.61001,
       "flipX": true,
-      "flipY": true,
-      "internalWiringDiagonalRatio": 0.1
+      "flipY": true
     },
     {
       "key": "1:-8.889:1",
@@ -115317,12 +115041,12 @@
           "heightMmFromOrigin": null
         }
       ],
+      "internalWiringDiagonalRatio": 0.1,
       "id": "wall-10",
       "name": "墙面 / 竖向面 10",
       "areaM2": 0.0375,
       "flipX": true,
-      "flipY": true,
-      "internalWiringDiagonalRatio": 0.1
+      "flipY": true
     },
     {
       "key": "1:-9.689:1",
@@ -115714,12 +115438,12 @@
           "heightMmFromOrigin": null
         }
       ],
+      "internalWiringDiagonalRatio": 0.1,
       "id": "wall-11",
       "name": "墙面 / 竖向面 11",
       "areaM2": 0.38,
       "flipX": true,
-      "flipY": true,
-      "internalWiringDiagonalRatio": 0.1
+      "flipY": true
     },
     {
       "key": "1:-9.889:1",
@@ -116751,12 +116475,12 @@
           "heightMmFromOrigin": null
         }
       ],
+      "internalWiringDiagonalRatio": 0.1,
       "id": "wall-12",
       "name": "墙面 / 竖向面 12",
       "areaM2": 2.94588,
       "flipX": true,
-      "flipY": true,
-      "internalWiringDiagonalRatio": 0.1
+      "flipY": true
     }
   ],
   "checks": {

@@ -1,22 +1,22 @@
-import {syncDisplayControls,isWallObject} from './display-controls.js?v=1.25';
-import {loadCompressedGltf} from './model-loader.js?v=1.25';
-import {createSocketOutline} from './socket-outline.js?v=1.25';
-import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.25';
+import {syncDisplayControls,isWallObject} from './display-controls.js?v=1.26';
+import {loadCompressedGltf} from './model-loader.js?v=1.26';
+import {createSocketOutline} from './socket-outline.js?v=1.26';
+import {isSocketObject,socketEdgeStyle} from './socket-highlight.js?v=1.26';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.25';
-import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.25';
-import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.25';
-import {dedupeTopViewDimensions} from './scene-math.js?v=1.25';
-import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.25';
-import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.25';
-import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.25';
-import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.25';
-import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.25';
+import {bindTapToZoom,tapFocusFrame} from './tap-zoom.js?v=1.26';
+import {mm,areaM2,drawingBounds,scheduleCsv,dimensionVisible,validateSection} from './v2-math.js?v=1.26';
+import {tileSurfaceEdges,keepTileEdge,mergeTileFacesForDisplay} from './tile-edges.js?v=1.26';
+import {dedupeTopViewDimensions} from './scene-math.js?v=1.26';
+import {surfaceDepth,outlineMaterial,fitDepthRange} from './render-depth.js?v=1.26';
+import {tilePresentation,TILE_FOCUS_OBJECT} from './tile-presentation.js?v=1.26';
+import {tileUV,hatchTexture,gradientTexture,CEILING_COLORS} from './tile-gradient.js?v=1.26';
+import {cabinetMaterial,studioEnvironment} from './cabinet-materials.js?v=1.26';
+import {cuttingOutline,stockRemainderPath} from './cutting-geometry.js?v=1.26';
 
 const $=s=>document.querySelector(s), ns='http://www.w3.org/2000/svg';
-const releaseVersion='1.25';
+const releaseVersion='1.26';
 const isHostedRelease=document.documentElement.dataset.release==='github'||/(?:^|\.)github\.io$/i.test(location.hostname);
 document.documentElement.classList.toggle('github-release',isHostedRelease);
 const state={section:1,cabinetVisible:true,wallCabinetVisible:true,cabinetDimensions:true,wallCabinetDimensions:true,cabinetDoorsVisible:false,wallCabinetDoorsVisible:false,cabinetTransparency:70,floor2HardVisible:true,floor2SoftVisible:false,floor2Transparency:0,floor2TileType:'1200',view:'3d',perspectivePreset:null,direction:'front',edges:true,socketHighlights:{1:true,3:true},dimensions:true,tileFocus:true,ceilingVisible:false,contextTransparency:0,baseTransparency:0,tileTransparency:0,selectedRuler:null,selectedTile:null,surface:null};
@@ -329,7 +329,7 @@ function frameCamera(){
     for(const point of fitPoints){const v=point.clone().sub(target);distance=Math.max(distance,v.dot(dir)+Math.max(Math.abs(v.dot(up))/tan,Math.abs(v.dot(right))/(tan*aspect))*1.19);}
     camera.position.copy(target).addScaledVector(dir,distance);
   }
-  else{const horizontal=state.view==='top'?size.x:['left','right'].includes(state.direction)?size.z:size.x;const vertical=state.view==='top'?size.z:size.y;const half=Math.max(vertical/2,horizontal/(2*aspect))*(mobile.matches?1.42:1.25);camera.left=-half*aspect;camera.right=half*aspect;camera.top=half;camera.bottom=-half;camera.position.copy(target).addScaledVector(dir,size.length()+5);}
+  else{const horizontal=state.view==='top'?size.x:['left','right'].includes(state.direction)?size.z:size.x;const vertical=state.view==='top'?size.z:size.y;const half=Math.max(vertical/2,horizontal/(2*aspect))*(mobile.matches?1.42:1.26);camera.left=-half*aspect;camera.right=half*aspect;camera.top=half;camera.bottom=-half;camera.position.copy(target).addScaledVector(dir,size.length()+5);}
   if(state.section===2&&state.view==='top') [camera.top,camera.bottom]=[camera.bottom,camera.top];
   camera.updateProjectionMatrix();camera.lookAt(target);controls.target.copy(target);controls.enableRotate=state.view==='3d';controls.maxPolarAngle=state.view==='3d'?Math.PI/2-.01:Math.PI;controls.update();placeModelLabels();layoutDirty=true;
 }
@@ -630,7 +630,7 @@ function setSection(section){
   $('#surface-select').hidden=section===3;
   $('.tile-type-switch').hidden=section!==3;
   document.querySelectorAll('button[data-section]').forEach(button=>{const active=Number(button.dataset.section)===section;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-  document.title=`O.家庭装修 V.1.25 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
+  document.title=`O.家庭装修 V.1.26 · ${section===1?'一楼硬装':section===2?'厨房橱柜、吊柜':'二楼硬装'}`;
   $('#layout').hidden=section===2;document.querySelector('nav a[href="#layout"]').hidden=section===2;$('#original-cutting').hidden=section===2;
   if(section===3)selectFloor2TileType('1200');else if(section===1)selectSurface('floor');
   $('#layout-title').textContent=section===3?`二楼瓷砖铺贴平面图 · ${floor2TileLabel(state.floor2TileType)}`:'铺贴排版平面图';$('#layout .section-heading .eyebrow').textContent=section===3?'03 / 独立排版图':'02 / 独立排版图';
@@ -640,7 +640,7 @@ function setSection(section){
   $('#measurement-title').textContent=section===1?'硬装尺寸':section===2?'橱柜吊柜尺寸':'二楼尺寸';
   $('#measurements .section-description').textContent=section===3&&!data.floor2Dimensions?.length?'二楼集合中没有单独的尺寸标尺。':`以下为源工程中的${sectionLabel}标尺；点击一行在模型中高亮。顶视只显示 X、Y 方向且不小于 100 mm 的尺寸。`;
   $('#model-canvas').setAttribute('aria-label',section===1?'一楼硬装三维视图':section===2?'橱柜吊柜区与一楼硬装三维视图':'二楼模型三维视图');
-  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.25`;
+  document.querySelector('.site-footer>span').textContent=`O.家庭装修 / ${data.section} · V.1.26`;
   const url=new URL(location);if(section===1)url.searchParams.delete('section');else url.searchParams.set('section',section);history.replaceState(null,'',url);
   applyPresentation();renderModelLabels();renderRulerTable();frameCamera();updateThumbnail();
 }
@@ -656,7 +656,7 @@ function bindEvents(){
 $('#edges-toggle').addEventListener('change',event=>{state.edges=event.target.checked;applyPresentation();});$('#dimension-toggle').addEventListener('change',e=>{state.dimensions=e.target.checked;renderModelLabels();});$('#reset-camera').addEventListener('click',frameCamera);$('#retry').addEventListener('click',()=>location.reload());
   $('#surface-select').addEventListener('change',e=>selectSurface(e.target.value));$('#tile-search').addEventListener('input',renderTileTable);$('#tile-label-toggle').addEventListener('change',updateDrawingLabels);
   document.querySelectorAll('[data-tile-type]').forEach(button=>button.addEventListener('click',()=>selectFloor2TileType(button.dataset.tileType)));
-  $('#drawing-in').addEventListener('click',()=>zoomDrawing(.8));$('#drawing-out').addEventListener('click',()=>zoomDrawing(1.25));$('#drawing-reset').addEventListener('click',()=>{drawView={...initialDrawView};setDrawingView();});
+  $('#drawing-in').addEventListener('click',()=>zoomDrawing(.8));$('#drawing-out').addEventListener('click',()=>zoomDrawing(1.26));$('#drawing-reset').addEventListener('click',()=>{drawView={...initialDrawView};setDrawingView();});
   const svg=$('#tile-drawing');svg.addEventListener('wheel',e=>{e.preventDefault();const r=svg.getBoundingClientRect();zoomDrawing(e.deltaY>0?1.12:1/1.12,{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height});},{passive:false});
   svg.addEventListener('pointerdown',e=>{if(e.button!==0)return;dragStart={id:e.pointerId,x:e.clientX,y:e.clientY,view:{...drawView},moved:false};});svg.addEventListener('pointermove',e=>{if(!dragStart||dragStart.id!==e.pointerId)return;const dx=e.clientX-dragStart.x,dy=e.clientY-dragStart.y;if(Math.hypot(dx,dy)>5){dragStart.moved=true;svg.setPointerCapture(e.pointerId);}if(!dragStart.moved)return;const r=svg.getBoundingClientRect();drawView={...dragStart.view,x:dragStart.view.x-dx/r.width*dragStart.view.w,y:dragStart.view.y-dy/r.height*dragStart.view.h};setDrawingView();});svg.addEventListener('pointerup',()=>dragStart=null);svg.addEventListener('pointercancel',()=>dragStart=null);
   $('#download-csv').addEventListener('click',()=>saveFile(scheduleCsv(state.section>1?{...data,surfaces:[]}:data),'text/csv;charset=utf-8',`${data.section}_全部尺寸_2.0.csv`));
