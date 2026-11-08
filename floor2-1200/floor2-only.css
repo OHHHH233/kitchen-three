@@ -1,0 +1,4 @@
+
+.section-overview,.site-header nav a[href="#measurements"],#floor2-tile-group-controls,.tile-type-switch,.layout-toolbar,.cutting-section,.measurement-section,.layout-section .table-header,.layout-section .tile-table-scroll,.layout-section .drawing-note,.layout-section .tile-detail {display:none!important}
+.site-header .version{display:none}.space-section{margin-top:24px}.wall-views{margin:52px 0}.wall-views h2{font-size:22px}.wall-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.wall-grid figure{margin:0;overflow:hidden;background:#fff;border:1px solid #d6d0cd;border-radius:8px}.wall-grid img{display:block;width:100%;height:auto}.wall-grid figcaption{padding:12px 16px;font-size:14px;color:#323232}.layout-workspace{display:block}.drawing-host{width:100%}
+@media(max-width:650px){.wall-grid{grid-template-columns:1fr;gap:12px}.wall-views{margin:34px 0}.wall-views h2{font-size:19px}.site-header nav a[href="#wall-views"]{display:block}}
